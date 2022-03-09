@@ -1,16 +1,30 @@
+import React from 'react'
 import { LockClosedIcon } from '@heroicons/react/solid'
+import { axiosInstanceToAPI } from '../../utils/axiosSv'
+import CookieManager from '../../utils/CookieManager';
 
-export default function Example() {
+export default function Login() {
+    const emailAdressRef = React.createRef();
+    const passwordRef = React.createRef();
+
+    const handleFormSubmit = event => {
+        event.preventDefault();
+        const { value: email } = emailAdressRef.current;
+        const { value: password } = passwordRef.current;
+
+        axiosInstanceToAPI.post("/user/login", {
+            email, password
+        }).then(res => {
+            //console.log(res.data);
+            CookieManager.setCookie('jwt', res.data.token);
+            window.location.assign('/dashboard');
+        }, err => {
+            alert('login failed!')
+        })//*/
+    }
+
     return (
         <>
-            {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
             <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-md w-full space-y-8">
                     <div>
@@ -22,9 +36,9 @@ export default function Example() {
                         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Sign in to your account</h2>
                         <p className="mt-2 text-center text-sm text-gray-600">
                         </p>
-                        
+
                     </div>
-                    <form className="mt-8 space-y-6" action="#" method="POST">
+                    <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
                         <input type="hidden" name="remember" defaultValue="true" />
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div>
@@ -32,6 +46,7 @@ export default function Example() {
                                     Email address
                                 </label>
                                 <input
+                                    ref={emailAdressRef}
                                     id="email-address"
                                     name="email"
                                     type="email"
@@ -46,6 +61,7 @@ export default function Example() {
                                     Password
                                 </label>
                                 <input
+                                    ref={passwordRef}
                                     id="password"
                                     name="password"
                                     type="password"
