@@ -8,6 +8,8 @@ import {
 import Dashboard from "./components/Dashboard/Dashboard";
 import Home from "./components/Home/Home";
 import Pg404 from "./components/Pg404/Pg404";
+import Login from "./components/Login/Login";
+import Register from "./components/Register/Register";
 
 // This site has 3 pages, all of which are rendered
 // dynamically in the browser (not server rendered).
@@ -43,6 +45,8 @@ export default function BasicExample() {
                 <Routes>
                     <Route index element={<Home />} />
                     <Route path="/dashboard" element={<Dashboard />} />
+                    <Route path="/register" element={<Register />} />
+                    <Route path="/login" element={<Login />} />
                     <Route path="*" element={<Pg404 />} />
                 </Routes>
             </div>
