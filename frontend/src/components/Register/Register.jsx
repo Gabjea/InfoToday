@@ -1,32 +1,34 @@
-/*
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
+import React from 'react'
 import { LockClosedIcon } from '@heroicons/react/solid'
+import { axiosInstanceToAPI } from '../../utils/axiosSv'
+import CookieManager from '../../utils/CookieManager';
 
 export default function Register() {
+    const nameRef = React.createRef();
+    const surnameRef = React.createRef();
+    const emailAdressRef = React.createRef();
+    const passwordRef = React.createRef();
+
+    const handleFormSubmit = event => {
+        console.log('here');
+        event.preventDefault();
+        const { value: name } = nameRef.current;
+        const { value: surname } = surnameRef.current;
+        const { value: email } = emailAdressRef.current;
+        const { value: password } = passwordRef.current;
+
+        axiosInstanceToAPI.post("/user/register", {
+            name, surname, email, password
+        }).then(res => {
+            CookieManager.setCookie('jwt', res.data.token);
+            window.location.assign('/dashboard');
+        }, err => {
+            alert('register failed!');
+        })
+    }
+
     return (
         <>
-            {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full bg-gray-50">
-        <body class="h-full">
-        ```
-      */}
             <div className="min-h-full flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
                 <div className="max-w-md w-full space-y-8">
                     <div>
@@ -40,21 +42,38 @@ export default function Register() {
 
                         </p>
                     </div>
-                    <form className="mt-8 space-y-6" action="#" method="POST">
+                    <form className="mt-8 space-y-6" onSubmit={handleFormSubmit}>
                         <input type="hidden" name="remember" defaultValue="true" />
                         <div className="rounded-md shadow-sm -space-y-px">
                             <div id="name">
                                 <label htmlFor="text" className="sr-only">
-                                    Username
+                                    Name
                                 </label>
                                 <input
-                                    id="Username"
-                                    name="Username"
+                                    ref={nameRef}
+                                    id="name"
+                                    name="name"
                                     type="text"
                                     //autoComplete="current-password"
                                     required
                                     className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                                    placeholder="Username"
+                                    placeholder="Name"
+                                />
+                            </div>
+
+                            <div id="surname">
+                                <label htmlFor="text" className="sr-only">
+                                    Surname
+                                </label>
+                                <input
+                                    ref={surnameRef}
+                                    id="surname"
+                                    name="surname"
+                                    type="text"
+                                    //autoComplete="current-password"
+                                    required
+                                    className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
+                                    placeholder="Surname"
                                 />
                             </div>
 
@@ -63,6 +82,7 @@ export default function Register() {
                                     Email address
                                 </label>
                                 <input
+                                    ref={emailAdressRef}
                                     id="email-address"
                                     name="email"
                                     type="email"
@@ -77,6 +97,7 @@ export default function Register() {
                                     Password
                                 </label>
                                 <input
+                                    ref={passwordRef}
                                     id="password"
                                     name="password"
                                     type="password"
