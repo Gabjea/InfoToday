@@ -5,10 +5,12 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
 
-const createAuthToken = (id) => {
+const createAuthToken = (id, name) => {
     
     return jwt.sign(
-        { id: id},
+        { 
+            id,
+            name},
         process.env.JWT_SECRET,
         {}
       );

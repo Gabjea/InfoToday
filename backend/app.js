@@ -3,10 +3,18 @@ const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
 
+const bodyParser = require('body-parser');
 require("dotenv").config();
 
 
 const app = express();
+const server = require('http').createServer(app);
+const io = require('socket.io')(server, {
+  cors: {
+      origin: "*",
+      methods: ["GET", "POST"]
+  }
+});
 const middlewares = require("./middlewares");
 const api = require('./api')
 
@@ -18,17 +26,43 @@ app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors());
 
-app.get("/", (req, res) => {
-    res.json({
-      message: "👋🌎 Team",
-    });
+const functions = require('./api/functions')
+
+io.on('connection', (socket) => {
+  socket.on("disconnect", (reason) => {
+    console.log(reason)
   });
 
 
-app.use("/api/v1", api);
-app.use(express.static('public'));
+  socket.emit('getname')
+  socket.on('getname', async(token) => {
+    socket.user = await functions.getUserByIdFromToken(token)
+    console.log(socket.user)
+  })
+  
+  socket.on('move-cursor',async data => {
+    
+    socket.broadcast.emit('move-cursor', {
+      data,
+      "name": socket.user.name + " " + socket.user.surname
+    })
+  }) 
+})
 
+
+app.get("/", (req, res) => {
+  res.json({
+    message: "👋🌎 Team",
+  });
+});
+
+
+app.use("/api/v1", api);
+
+
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);
 
-module.exports = app;
+
+module.exports = server;
