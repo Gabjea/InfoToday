@@ -33,19 +33,23 @@ io.on('connection', (socket) => {
     console.log(reason)
   });
 
+   let isName = false;
 
   socket.emit('getname')
   socket.on('getname', async(token) => {
     socket.user = await functions.getUserByIdFromToken(token)
-    console.log(socket.user)
+    isName = true
   })
   
   socket.on('move-cursor',async data => {
-    
-    socket.broadcast.emit('move-cursor', {
-      data,
-      "name": socket.user.name + " " + socket.user.surname
+    if(isName)
+    {
+      
+      socket.broadcast.emit('move-cursor', {
+      pos: data,
+      name: socket.user.name + " " + socket.user.surname
     })
+    }
   }) 
 })
 

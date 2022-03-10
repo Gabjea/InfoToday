@@ -8,7 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 export default function Dashboard(props) {
     let refToMov = React.createRef();
     let [pos, setPos] = React.useState({ x: 0, y: 0 });
-
+    let [name, setName] = React.useState('');
     React.useEffect(() => {
         if (CookieManager.getCookie('jwt') == null) {
             window.location.assign('/login');
@@ -20,7 +20,7 @@ export default function Dashboard(props) {
     React.useEffect(() => {
         console.log('Connecting...');
         //console.log(socket);
-        const auxSocket = io(`ws://79.115.133.126:5000`);
+        const auxSocket = io(`ws://192.168.0.132:5000`);
 
         setSocket(auxSocket);
 
@@ -29,8 +29,9 @@ export default function Dashboard(props) {
         })
 
         auxSocket.on('move-cursor', message => {
-            const { pageX, pageY } = message.data.pos;
+            const { pageX, pageY } = message.pos;
             setPos({ x: pageX, y: pageY });
+            setName(message.name);
         })//*/
 
         auxSocket.on('getname', () => {
@@ -48,7 +49,7 @@ export default function Dashboard(props) {
 
             //console.log(refToMov);
             //console.log(pageX, pageY);
-            socket.emit('move-cursor', ({ pos: { pageX, pageY } }));
+            socket.emit('move-cursor', ({  pageX, pageY  }));
         }
 
         //console.log(refToMov);
@@ -71,7 +72,7 @@ export default function Dashboard(props) {
             <div ref={refToMov} id="movable" style={{ 'color': 'blue', 'position': 'absolute', 'left': 0, 'top': 0, 'userSelect': 'none' }} onLoad={() => {
             }}>
                 <FontAwesomeIcon icon={faArrowPointer } />
-
+                <small> {name}</small>
             </div>
         </div>
     );
