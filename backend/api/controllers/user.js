@@ -5,7 +5,8 @@ const bcrypt = require("bcrypt");
 
 const functions = require("../functions");
 const jwtDecoder = require("jwt-decode");
-
+const fs = require('fs');
+const exec = require('child_process').exec;
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -92,7 +93,17 @@ const updateUserProfileController = async (req, res) => {
   }
 }
 
-
+const compileCode = (req, res) => {
+  const { code } = req.body
+    console.log(code);
+    
+    fs.writeFile('helloworld.cpp', code, async function (err) {
+      if (err) return console.log(err);
+      
+      exec(`gcc helloworld.cpp -o opt`);
+      
+    })
+}
 
 
 module.exports = {
@@ -100,5 +111,5 @@ module.exports = {
   registerController,
   getUserProfileController,
   updateUserProfileController,
-
+  compileCode
 };

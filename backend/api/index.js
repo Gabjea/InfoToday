@@ -12,5 +12,4 @@ router.use('/admin', middlewares.Auth, middlewares.hasAdmin, adminApi)
 
 
 
-
 module.exports = router

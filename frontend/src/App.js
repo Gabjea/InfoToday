@@ -39,6 +39,7 @@ export default function BasicExample() {
                     <Route path="/register" element={<Register />} />
                     <Route path="/login" element={<Login />} />
                     <Route path="*" element={<Pg404 />} />
+
                 </Routes>
             </div>
         </Router>
