@@ -1,21 +1,22 @@
 import React from 'react';
 import CookieManager from "./../../utils/CookieManager";
 import io from 'socket.io-client';
-import { faSolid, faArrowPointer } from "@fortawesome/free-solid-svg-icons";
+import { faArrowPointer, faL } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import CodeMirror from '@uiw/react-codemirror';
-import { cpp } from '@codemirror/lang-cpp'
-import axios from 'axios'
-import { axiosInstanceToAPI } from './../../utils/axiosSv'
+import 'codemirror/theme/dracula.css'
+import { axiosInstanceToAPI, baseWsURL } from '../../utils/serverAPI'
+import CodeMirror from 'codemirror'
+import 'codemirror/lib/codemirror.css'
+import 'codemirror/theme/dracula.css'
+import 'codemirror/mode/clike/clike'
+import 'codemirror/keymap/sublime'
 
 export default function Dashboard(props) {
-    const startingCode = `
-#include<iostream>
+    const startingCode = `#include<iostream>
 using namespace std;
 
 int main(){
-    
-
+    //add your code here
     return 0;
 }
     `
@@ -33,7 +34,7 @@ int main(){
     React.useEffect(() => {
         console.log('Connecting...');
         //console.log(socket);
-        const auxSocket = io(`ws://192.168.0.132:5000`);
+        const auxSocket = io(baseWsURL);
 
         setSocket(auxSocket);
 
@@ -43,12 +44,19 @@ int main(){
 
         auxSocket.on('move-cursor', message => {
             const { pageX, pageY } = message.pos;
+            if (pageX > window.innerWidth - (5 / 100) * window.innerWidth || pageX < 0 || pageY > window.innerHeight || pageY < 0) {
+                return;
+            }
             setPos({ x: pageX, y: pageY });
             setName(message.name);
         })//*/
 
         auxSocket.on('getname', () => {
             auxSocket.emit('getname', CookieManager.getCookie('jwt'));
+        })
+
+        auxSocket.on('compile', message => {
+            setOutput(message);
         })
 
         return () => auxSocket.close();
@@ -77,69 +85,159 @@ int main(){
     })
 
     let [editorCode, setEditorCode] = React.useState(startingCode);
-    let cmRef = React.createRef();
+    let [input, setInput] = React.useState();
+    let [output, setOutput] = React.useState();
     const handleSubmit = event => {
         event.preventDefault();
-        let code = '';/*
-        console.log(editorCode);
-        for (let ch of editorCode) {
-            if (ch === '"') {
-
-            }
-        }//*/
-        var data = JSON.stringify({
-            "code": editorCode,
-            "language": "cpp",
-            "input": ""
-        });
-        console.log(editorCode);
-        axiosInstanceToAPI.post("/user/compile", {code: editorCode} ).then(res => {
-            console.log(res.data);
-        })
-
+        console.log(input);
+        socket.emit('compile', { editorCode, input });
     }
 
+    const [runnedForInput, setRunnedForInput] = React.useState(false);
+    React.useEffect(() => {
+        if (runnedForInput === false) {
+            setRunnedForInput(true);
+            return;
+        }
+        //console.log('runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+        const editor = CodeMirror.fromTextArea(document.getElementById('input'), {
+            lineNumbers: true,
+            keyMap: 'sublime',
+            theme: 'dracula',
+            mode: 'text',
+        });
+
+        editor.setSize(window.innerWidth, 100);
+
+        editor.on('beforeSelectionChange', (instance, { ranges, origin, update }) => {
+            if (origin === '*mouse') {
+                //console.log(ranges[0].anchor, ranges[0].head);
+                let { line: startLine, ch: startCol } = ranges[0].anchor;
+                let { line: endLine, ch: endCol } = ranges[0].head;
+                //console.log(startLine, startCol, endLine, endCol);
+                if (startLine > endLine) {
+                    [startLine, endLine] = [endLine, startLine]
+                }
+                if (startCol > endCol) {
+                    [startCol, endCol] = [endCol, startCol]
+                }
+                socket.emit('selection-input', { startLine, startCol, endLine, endCol });
+            }
+
+        })//*/
+
+        editor.on('change', (instance, changes) => {
+            const { origin } = changes;
+            if (origin !== 'setValue') {
+                socket.emit('edit-input', instance.getValue());
+                setInput(instance.getValue());
+            }
+        })
+
+        socket.on('edit-input', message => {
+            //console.log(message);
+            editor.setValue(message);
+            setInput(message);
+        })
+
+        socket.on('selection-input', message => {
+            //console.log(message);
+            editor.markText(
+                { line: 0, ch: 0 },
+                { line: 1e9, ch: 1e9 },
+                { css: "background-color: transparent" }
+            )
+            editor.markText(
+                { line: message.startLine, ch: message.startCol },
+                { line: message.endLine, ch: message.endCol },
+                { css: "background-color: red" }
+            )
+
+        })
+    }, [socket, runnedForInput])
+
+    const [runned, setRunned] = React.useState(false);
+    React.useEffect(() => {
+        if (runned === false) {
+            setRunned(true);
+            return;
+        }
+        //console.log('runnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn');
+        const editor = CodeMirror.fromTextArea(document.getElementById('codemirror'), {
+            lineNumbers: true,
+            keyMap: 'sublime',
+            theme: 'dracula',
+            mode: 'text/x-c++src'        });
+        //editor.setValue('0123456789');
+        
+        editor.setValue(startingCode);
+        editor.on('beforeSelectionChange', (instance, { ranges, origin, update }) => {
+            if (origin === '*mouse') {
+                //console.log(ranges[0].anchor, ranges[0].head);
+                let { line: startLine, ch: startCol } = ranges[0].anchor;
+                let { line: endLine, ch: endCol } = ranges[0].head;
+                //console.log(startLine, startCol, endLine, endCol);
+                if (startLine > endLine) {
+                    [startLine, endLine] = [endLine, startLine]
+                }
+                if (startCol > endCol) {
+                    [startCol, endCol] = [endCol, startCol]
+                }
+                socket.emit('selection', { startLine, startCol, endLine, endCol });
+            }
+
+        })//*/
+
+        editor.on('change', (instance, changes) => {
+            const { origin } = changes;
+            if (origin !== 'setValue') {
+                socket.emit('edit-code', instance.getValue());
+                setEditorCode(instance.getValue());
+            }
+        })
+
+        socket.on('edit-code', message => {
+            //console.log(message);
+            setEditorCode(message);
+            editor.setValue(message);
+        })
+
+        socket.on('selection', message => {
+            //console.log(message);
+            editor.markText(
+                { line: 0, ch: 0 },
+                { line: 1e9, ch: 1e9 },
+                { css: "background-color: transparent" }
+            )
+            editor.markText(
+                { line: message.startLine, ch: message.startCol },
+                { line: message.endLine, ch: message.endCol },
+                { css: "background-color: red" }
+            )
+
+        })
+    }, [socket, runned])
+
     return (
-        <div>
+        <div style={{ 'overflow': 'hidden' }}>
             Dashboard!
             <br />
             <br />
             <br />
-            <div ref={refToMov} id="movable" style={{ 'color': 'blue', 'position': 'absolute', 'left': 0, 'top': 0, 'userSelect': 'none' }} onLoad={() => {
+
+            <textarea id="codemirror" />
+            <br />
+            <br />
+            <br />
+            <textarea id="input" />
+
+            <div ref={refToMov} id="movable" style={{ 'overflow': 'hidden', 'color': 'blue', 'position': 'absolute', 'left': 0, 'top': 0, 'userSelect': 'none' }} onLoad={() => {
             }}>
                 <FontAwesomeIcon icon={faArrowPointer} />
-                <small> {name}</small>
-                {/* <ControlledEditor 
-                    onBeforeChange={() => {}}
-                    value={'sdfsdz'}
-                    className="code-mirror-wrapper"
-                    style= {{'position':'absolute', 'top':'5rem'}}
-                    options={{
-                      lineWrapping: true,
-                      lint: true,
-                      mode: 'cpp',
-                      theme: 'material',
-                      lineNumbers: true
-                    }}
-                /> */
-
-
-                }
+                <small style={{ 'overflow': 'hidden' }}> {name}</small>
             </div>
-            <CodeMirror
-                ref={cmRef}
-                value={startingCode}
-
-
-                height="200px"
-                extensions={[cpp()]}
-                onChange={(value, viewUpdate) => {
-                    console.log('value:', value);
-                    setEditorCode(value);
-                }}
-
-            />
-
+            <hr />
+            <div>{output}</div>
             <button onClick={handleSubmit} id='submit-code'>submit</button>
         </div>
     );

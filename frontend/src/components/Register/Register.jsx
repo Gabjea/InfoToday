@@ -1,6 +1,6 @@
 import React from 'react'
 import { LockClosedIcon } from '@heroicons/react/solid'
-import { axiosInstanceToAPI } from '../../utils/axiosSv'
+import { axiosInstanceToAPI } from '../../utils/serverAPI'
 import CookieManager from '../../utils/CookieManager';
 
 export default function Register() {
