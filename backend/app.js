@@ -2,7 +2,7 @@ const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
-
+const axios = require("axios")
 const bodyParser = require('body-parser');
 require("dotenv").config();
 
@@ -11,8 +11,8 @@ const app = express();
 const server = require('http').createServer(app);
 const io = require('socket.io')(server, {
   cors: {
-      origin: "*",
-      methods: ["GET", "POST"]
+    origin: "*",
+    methods: ["GET", "POST"]
   }
 });
 const middlewares = require("./middlewares");
@@ -33,24 +33,72 @@ io.on('connection', (socket) => {
     console.log(reason)
   });
 
-   let isName = false;
+  let isName = false;
 
   socket.emit('getname')
-  socket.on('getname', async(token) => {
+  socket.on('getname', async (token) => {
     socket.user = await functions.getUserByIdFromToken(token)
     isName = true
   })
-  
-  socket.on('move-cursor',async data => {
-    if(isName)
-    {
-      
+
+  socket.on('edit-code', data => {
+    socket.broadcast.emit('edit-code', data)
+  })
+
+  socket.on('edit-input', data => {
+    socket.broadcast.emit('edit-input', data)
+  })
+
+
+  socket.on('compile', data => {
+    console.log(data.editorCode);
+    var post = JSON.stringify({
+      "code": data.editorCode,
+      "language": "cpp",
+      "input": data.input !== null ? data.input : '' 
+    });
+
+    var config = {
+      method: 'post',
+      url: 'https://codexweb.netlify.app/.netlify/functions/enforceCode',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      data: post
+    };
+
+    axios(config)
+      .then(function (response) {
+        io.emit('compile', response.data.output)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  })
+
+
+  socket.on('selection', data => {
+
+
+    socket.broadcast.emit('selection', data)
+  })
+
+  socket.on('selection-input', data => {
+
+
+    socket.broadcast.emit('selection-input', data)
+  })
+
+
+  socket.on('move-cursor', async data => {
+    if (isName) {
+
       socket.broadcast.emit('move-cursor', {
-      pos: data,
-      name: socket.user.name + " " + socket.user.surname
-    })
+        pos: data,
+        name: socket.user.name + " " + socket.user.surname
+      })
     }
-  }) 
+  })
 })
 
 
