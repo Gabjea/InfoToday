@@ -14,7 +14,6 @@ router.post("/register",controller.registerController)
 router.get("/profile",middlewares.Auth,controller.getUserProfileController)
 router.patch("/profile",middlewares.Auth,controller.updateUserProfileController)
 
-router.post("/compile", controller.compileCode)
 
 
 
