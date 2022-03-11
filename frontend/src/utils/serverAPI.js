@@ -1,7 +1,7 @@
 import axios from "axios";
 import CookieManager from "./CookieManager";
 
-const host = '79.115.133.126:5000';
+const host = '192.168.0.132:5000';
 export const baseHttpURL = `http://${host}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
 export const baseWsURL = `ws://${host}`;
