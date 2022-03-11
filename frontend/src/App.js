@@ -12,26 +12,27 @@ import Register from "./components/Register/Register";
 import Sidebar from "./components/Sidebar/Sidebar";
 import Teachers from "./components/Teachers/Teachers";
 import Applies from "./components/Applies/Applies";
+import Account from "./components/Account/Account";
 
 export default function BasicExample() {
     return (
         <Router>
             <div className="md:flex">
-            <Sidebar />
-            <div className="w-screen h-screen ">
-               
-                <Routes>
-                    <Route index element={<Home />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
-                    <Route path="/register" element={<Register />} />
-                    <Route path="/login" element={<Login />} />
-                    <Route path="/teachers" element={<Teachers />} />
-                    <Route path="/applies" element={<Applies />} />
-                    <Route path="*" element={<Pg404 />} />
+                <Sidebar />
+                <div className="w-screen h-screen ">
 
-                </Routes>
+                    <Routes>
+                        <Route index element={<Home />} />
+                        <Route path="/dashboard" element={<Dashboard />} />
+                        <Route path="/register" element={<Register />} />
+                        <Route path="/login" element={<Login />} />
+                        <Route path="/teachers" element={<Teachers />} />
+                        <Route path="/applies" element={<Applies />} />
+                        <Route path="/account" element={<Account />} />
+                        <Route path="*" element={<Pg404 />} />
+                    </Routes>
                 </div>
-            
+
             </div>
         </Router >
     );

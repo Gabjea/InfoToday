@@ -8,23 +8,25 @@ export default function Register() {
     const surnameRef = React.createRef();
     const emailAdressRef = React.createRef();
     const passwordRef = React.createRef();
+    const inputCheckRef = React.createRef();
 
     const handleFormSubmit = event => {
-        console.log('here');
+        //console.log('here');
         event.preventDefault();
         const { value: name } = nameRef.current;
         const { value: surname } = surnameRef.current;
         const { value: email } = emailAdressRef.current;
         const { value: password } = passwordRef.current;
 
+        //console.log(inputCheckRef.current.checked);
         axiosInstanceToAPI.post("/user/register", {
-            name, surname, email, password
+            name, surname, email, password, isTeacher: inputCheckRef.current.checked
         }).then(res => {
             CookieManager.setCookie('jwt', res.data.token);
             window.location.assign('/dashboard');
         }, err => {
             alert('register failed!');
-        })
+        })//*/
     }
 
     return (
@@ -113,13 +115,14 @@ export default function Register() {
                         <div className="flex items-center justify-between">
                             <div className="flex items-center">
                                 <input
-                                    id="remember-me"
-                                    name="remember-me"
+                                    ref={inputCheckRef}
+                                    id="vreau sa predau"
+                                    name="vreau sa predau"
                                     type="checkbox"
                                     className="h-4 w-4 text-indigo-600 focus:ring-indigo-500 border-gray-300 rounded"
                                 />
-                                <label htmlFor="remember-me" className="ml-2 block text-sm text-gray-900">
-                                    Remember me
+                                <label htmlFor="vreau sa predau" className="ml-2 block text-sm text-gray-900">
+                                    Vreau sa predau
                                 </label>
                             </div>
 
