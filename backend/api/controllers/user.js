@@ -1,11 +1,12 @@
 const User = require("../../models/user");
-
+const Apply = require('../../models/apply')
 const mongoose = require("../../database");
 const bcrypt = require("bcrypt");
 
 const functions = require("../functions");
 const jwtDecoder = require("jwt-decode");
 var axios = require('axios');
+const user = require("../../models/user");
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -92,12 +93,36 @@ const updateUserProfileController = async (req, res) => {
   }
 }
 
+const getUserRole = async(req,res) => {
+  const user = await functions.getUserByIdFromToken(req.headers.authorization)
+  res.send(user.role)
+}
 
+
+const getAllUserApplies = (req, res) => {
+  const student_id =  jwtDecoder(req.headers.authorization).id
+
+  Apply.find({student: student_id}, async(err, result) =>{
+    let applies_info = []
+    for(const apply of result){
+      await User.findOne({ _id: apply.teacher }).then(teacher => {
+          applies_info.push({ id: teacher._id, name: teacher.name + " " + teacher.surname, pic: teacher.profile_pic, status: apply.status })
+      }).catch(err => {
+          console.log(err)
+      })
+    }
+    
+    
+    res.send(applies_info)
+  })
+
+}
 
 module.exports = {
   loginController,
   registerController,
   getUserProfileController,
   updateUserProfileController,
-  
+  getUserRole,
+  getAllUserApplies
 };
