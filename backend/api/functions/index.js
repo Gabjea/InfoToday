@@ -35,8 +35,8 @@ const getUserByIdFromToken = async(token) =>{
 const updateUserProfile = async(token,body) =>{
     try {
         const id = jwtDecoder(token).id
-        const {name,surname,profile_pic,email,password} = body
-        
+        const {name,surname,profile_pic,email,password,desc} = body
+        console.log(profile_pic);
         const passwordSalt = 10;
         bcrypt.hash(password, passwordSalt, async function (err, hashedPassword) {
             
@@ -45,7 +45,8 @@ const updateUserProfile = async(token,body) =>{
                 surname:surname,
                 profile_pic:profile_pic,
                 email:email,
-                password: hashedPassword
+                password: hashedPassword,
+                desc: desc
             },{
                 returnOriginal: false
             }).catch(
@@ -61,11 +62,38 @@ const updateUserProfile = async(token,body) =>{
     }
 }
 
+const uploadFile = async(files,path,extension) => {
+    try{
+       
+    if (!files) {
+        return null
+      } else {
+        switch (extension) {
+           
+            case 'png':
+                let file = files.file;
+                file.mv('.' + path);
+                return true
+                
+            
+            default: 
+                files[''].mv('.' + path);
+                return true
+                
+        }
+         
+      }
+    } catch (err) {
+      console.log(err)
+      return false;
+    }
+}
+
 
 
 module.exports = {
     getUserByIdFromToken,
     updateUserProfile,
     createAuthToken,
-   
+    uploadFile
 }

@@ -36,7 +36,7 @@ const loginController = async (req, res) => {
 };
 
 const registerController = async (req, res) => {
-  const { name, surname, email, password } = req.body;
+  const { name, surname, email, password , isTeacher} = req.body;
   const alreadyExistsUser = await User.findOne({ email: email })
     .exec()
     .catch((err) => {
@@ -55,7 +55,7 @@ const registerController = async (req, res) => {
       profile_pic: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
       email,
       password: hashedPassword,
-      role: "user",
+      role: isTeacher ? 'teacher' : 'student',
       subscription: false
     });
     const savedUser = await newUser.save().catch((err) => {
@@ -118,11 +118,56 @@ const getAllUserApplies = (req, res) => {
 
 }
 
+
+
+const uploadProfilePictureController = async (req, res) => {
+
+  try {
+    const token = req.headers.authorization.split(' ')[1]
+    const user = await functions.getUserByIdFromToken(token)
+    const path ='/uploads/icons/' + user._id + ".png"
+    const file = await functions.uploadFile(req.files,path,'png')
+
+    if (!file)
+      res.send({
+        status: false,
+        message: 'Nicio poza nu a fost incarcata!'
+      });
+      else {
+        await functions.updateUserProfile(token, { profile_pic: process.env.HOST + path })
+        console.log('caca');
+        res.status(200).json({ message: "Ti-ai actualizat poza de profil cu succes!" })
+      }
+
+  } catch (err) {
+    console.log(err)
+    res.status(500).send(err);
+  }
+}
+
+
+const getUploadedIcon = (req, res) => {
+
+  res.sendFile(req.params.img, { root: './uploads/icons' })
+}
+
+const getUserProfileFromIdController = async(req,res) => {
+  const id = req.params.id
+  res.send(await User.findById(id).catch(
+    (err) => {
+      console.log("Error: ", err);
+    }
+  ))
+}
+
 module.exports = {
   loginController,
   registerController,
   getUserProfileController,
   updateUserProfileController,
   getUserRole,
-  getAllUserApplies
+  getAllUserApplies,
+  uploadProfilePictureController,
+  getUploadedIcon,
+  getUserProfileFromIdController
 };
