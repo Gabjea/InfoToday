@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faBook, faX,
+    faBook, faXmark,
     faLaptopCode, faEllipsis,
     faUser, faChartLine, faUserCheck
 } from "@fortawesome/free-solid-svg-icons";
@@ -14,6 +14,7 @@ export default function Sidebar(props) {
         { title: "Dashboard", src: faChartLine },
         { title: "Probleme", src: faBook },
         { title: "Account", src: CookieManager.getCookie('jwt') ? faUserCheck : faUser },
+        {title: 'Messages', src: null},
     ];
 
     return (
@@ -24,8 +25,8 @@ export default function Sidebar(props) {
                     } bg-purple-500 h-screen p-5  pt-8 relative duration-300`}
             >
                 <FontAwesomeIcon
-                    icon={open ? faX : faEllipsis}
-                    className={`absolute cursor-pointer left-2 top-2 w-6 h-6 border-dark-purple
+                    icon={open ? faXmark : faEllipsis}
+                    className={`absolute cursor-pointer left-2 top-2 w-6 h-6 border-none
            border-2 rounded-full  ${!open && "rotate-180"}`}
                     onClick={() => setOpen(!open)}
                 />
