@@ -9,6 +9,9 @@ const router = Router()
 router.post("/login",controller.loginController)
 router.post("/register",controller.registerController)
 
+router.get('/role', middlewares.Auth, controller.getUserRole)
+
+router.get('/applies', middlewares.Auth, controller.getAllUserApplies)
 
 // User Profile
 router.get("/profile",middlewares.Auth,controller.getUserProfileController)

@@ -26,9 +26,13 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    subscription: {
-        type: Boolean,
-        required: true,
+    desc: {
+        type: String,
+        required: false
+    },
+    students: {
+        type: Array,
+        required: false,
     }
 })
 
