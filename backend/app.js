@@ -1,10 +1,12 @@
+require("dotenv").config();
 const express = require("express");
 const morgan = require("morgan");
 const helmet = require("helmet");
 const cors = require("cors");
 const axios = require("axios")
 const bodyParser = require('body-parser');
-require("dotenv").config();
+const fileUpload = require("express-fileupload")
+const controller = require("./api/controllers/user");
 
 
 const app = express();
@@ -108,9 +110,13 @@ app.get("/", (req, res) => {
   });
 });
 
-
+app.use(fileUpload({
+  createParentPath: true
+}));
 
 app.use("/api/v1", api);
+
+app.get("/uploads/icons/:img", controller.getUploadedIcon)
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
