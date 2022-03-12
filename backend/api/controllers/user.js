@@ -1,5 +1,6 @@
 const User = require("../../models/user");
 const Apply = require('../../models/apply')
+const Message = require('../../models/message')
 const mongoose = require("../../database");
 const bcrypt = require("bcrypt");
 
@@ -26,7 +27,7 @@ const loginController = async (req, res) => {
         .status(406)
         .json({ error: "Email-ul sau parola sunt incorecte!" });
 
-    const jwtToken = functions.createAuthToken(userWithEmail._id, userWithEmail.name + " " + userWithEmail.surname)
+    const jwtToken = functions.createAuthToken(userWithEmail._id, userWithEmail.name + " " + userWithEmail.surname, userWithEmail.role)
     res.json({
       message: "Te-ai autentificat cu succes!",
       token: "Bearer " + jwtToken,
@@ -64,7 +65,7 @@ const registerController = async (req, res) => {
     });
 
     if (savedUser) {
-      const jwtToken = functions.createAuthToken(savedUser._id, savedUser.name + " " + savedUser.surname)
+      const jwtToken = functions.createAuthToken(savedUser._id, savedUser.name + " " + savedUser.surname, savedUser.role)
       res.json({
         message: "Te-ai inregistrat cu succes",
         token: "Bearer " + jwtToken,
@@ -160,6 +161,45 @@ const getUserProfileFromIdController = async(req,res) => {
   ))
 }
 
+const getUserChats = async(req, res) => {
+  const user_id =  jwtDecoder(req.headers.authorization).id
+  
+
+  await Message.find({receiver: user_id}).distinct('sender', async(err, result) =>{
+
+    let sender_info = []
+    for(const id of result){
+      await User.findOne({ _id: id }).then(sender => {
+        sender_info.push({ id: sender._id, name: sender.name + " " + sender.surname, pic: sender.profile_pic })
+      }).catch(err => {
+          console.log(err)
+      })
+    }
+    
+    
+    res.send(sender_info)
+
+
+
+  }).clone()
+
+}
+
+const getUserMessagesFromPerson = async(req, res) => {
+  const user_id =  jwtDecoder(req.headers.authorization).id
+  const chattingWith = req.params.id
+
+  await Message.find({$or:[{sender: user_id, receiver:chattingWith},{sender: chattingWith, receiver:user_id}]}, (err, result) =>{
+    if(err) res.send(err)
+    
+
+    res.send(result)
+  }).clone()
+
+}
+
+
+
 module.exports = {
   loginController,
   registerController,
@@ -169,5 +209,7 @@ module.exports = {
   getAllUserApplies,
   uploadProfilePictureController,
   getUploadedIcon,
-  getUserProfileFromIdController
+  getUserProfileFromIdController,
+  getUserChats,
+  getUserMessagesFromPerson
 };
