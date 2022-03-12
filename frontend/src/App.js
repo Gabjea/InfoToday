@@ -13,6 +13,7 @@ import Sidebar from "./components/Sidebar/Sidebar";
 import Teachers from "./components/Teachers/Teachers";
 import Applies from "./components/Applies/Applies";
 import Account from "./components/Account/Account";
+import Messages from "./components/Messages/Messages";
 
 export default function BasicExample() {
     return (
@@ -29,6 +30,7 @@ export default function BasicExample() {
                         <Route path="/teachers" element={<Teachers />} />
                         <Route path="/applies" element={<Applies />} />
                         <Route path="/account" element={<Account />} />
+                        <Route path="/messages" element={<Messages />} />
                         <Route path="*" element={<Pg404 />} />
                     </Routes>
                 </div>
