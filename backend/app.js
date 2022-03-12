@@ -63,9 +63,10 @@ io.on('connection', (socket) => {
   socket.on('send-message',async data => {{
     const sendToIndex =sockets.findIndex((sendTo) => sendTo.user_id === data.otherId)
     const senderIndex = sockets.findIndex((sender) => sender.socket_id === socket.id)
-    
-    socket.to(sockets[sendToIndex].socket_id).emit('send-message',
-    {sender: sockets[senderIndex].user_id,
+
+
+     socket.to(sockets[sendToIndex].socket_id).emit('send-message',
+     {sender: sockets[senderIndex].user_id,
      receiver: sockets[sendToIndex].user_id,
      message : data.message
     })
@@ -87,8 +88,7 @@ io.on('connection', (socket) => {
         
     });
 
-    if(savedMessage)
-      console.log("merge")
+    
 
   }})
 
