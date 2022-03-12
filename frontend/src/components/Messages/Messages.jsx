@@ -4,12 +4,15 @@ import ChatHead from "./ChatHead/ChatHead";
 import FromMessage from "./ChatHead/MessageBox/FromMessage";
 import MyMessage from "./ChatHead/MessageBox/MyMessage";
 
-export default function Messages() {
+export default function Messages({ socket }) {
     const [chatHeads, setChatHeads] = React.useState([]);
     const [messages, setMessages] = React.useState([]);
     const [currChatUserPic, setCurrChatUserPic] = React.useState('');
     const [myId, setMyId] = React.useState('');
     const [myPic, setMyPic] = React.useState('');
+    const [otherName, setOhterName] = React.useState('');
+    const [otherId, setOtherId] = React.useState('');
+    const txtInputRef = React.createRef();
 
     React.useEffect(() => {
         getUserDataFromJwtReq().then(data => {
@@ -22,12 +25,14 @@ export default function Messages() {
     }, [])
 
     const handleClick = event => {
-        //event.preventDefault();
+        event.preventDefault();
         //console.log(event.target.id);
         const { id } = event.target;
         axiosAuthInstanceToAPI.get(`/user/chat/${chatHeads[id].id}`).then(res => {
             setMessages(res.data);
             setCurrChatUserPic(chatHeads[id].pic);
+            setOhterName(chatHeads[id].name);
+            setOtherId(chatHeads[id].id);
         }, err => {
             console.error(err);
         })
@@ -41,7 +46,25 @@ export default function Messages() {
         }, err => {
             console.error(err);
         })//*/
+
+        socket.on('send-message', message => {
+            setMessages(preMessages => [...preMessages, message]);
+            //console.log(messages);
+        })
     }, []);
+
+    const handleSendCLick = event => {
+        event.preventDefault();
+        const { value: mesText } = txtInputRef.current;
+        txtInputRef.current.value = '';
+        if (!mesText) {
+            alert('mesajul e gol!');
+            return;
+        }
+        //console.log(mesText);
+        //setMessages(preMessages => [...preMessages, mesText]);
+        socket.emit('send-message', { otherId, message: mesText });
+    }
 
     return (
         <div class="flex h-screen antialiased text-gray-800">
@@ -72,15 +95,15 @@ export default function Messages() {
                         class="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
                     >
                         <div class="h-20 w-20 rounded-full border overflow-hidden">
-                            <img
-                                src={currChatUserPic != null ? currChatUserPic : ''}
-                                alt="Avatar"
-                                class="h-full w-full"
-                            />
+                            {currChatUserPic &&
+                                <img
+                                    src={currChatUserPic}
+                                    alt="Avatar"
+                                    class="h-full w-full"
+                                />}
                         </div>
-                        <div class="text-sm font-semibold mt-2">Aminos Co.</div>
-                        <div class="text-xs text-gray-500">Lead UI/UX Designer</div>
-                        <div class="flex flex-row items-center mt-3">
+                        <div class="text-sm font-semibold mt-2">{otherName}</div>
+                        {currChatUserPic && <div class="flex flex-row items-center mt-3">
                             <div
                                 class="flex flex-col justify-center h-4 w-8 rounded-full"
                             >
@@ -88,7 +111,7 @@ export default function Messages() {
  rounded-full self-end mr-1"></div>
                             </div>
                             <div class="leading-none text-xs">Active</div>
-                        </div>
+                        </div>}
                     </div>
                     <div class="flex flex-col mt-8">
                         <div class="flex flex-row items-center justify-between text-xs">
@@ -125,14 +148,14 @@ export default function Messages() {
                                             if (message.sender === myId) {
                                                 return <MyMessage pic={myPic} message={message.message} />
                                             } else {
-                                                return <FromMessage pic={currChatUserPic}  message={message.message} />
+                                                return <FromMessage pic={currChatUserPic} message={message.message} />
                                             }
                                         })
                                     }
                                 </div>
                             </div>
                         </div>
-                        <div
+                        {currChatUserPic && <div id="text-zone"
                             className="flex flex-row items-center h-16 rounded-xl bg-white w-full px-4"
                         >
                             <div>
@@ -158,6 +181,7 @@ export default function Messages() {
                             <div className="flex-grow ml-4">
                                 <div className="relative w-full">
                                     <input
+                                        ref={txtInputRef}
                                         type="text"
                                         className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                                     />
@@ -182,8 +206,8 @@ export default function Messages() {
                                 </div>
                             </div>
                             <div class="ml-4">
-                                <button
-                                    class="flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                                <button onClick={handleSendCLick}
+                                    class="bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
                                 >
                                     <span>Send</span>
                                     <span class="ml-2">
@@ -204,7 +228,7 @@ export default function Messages() {
                                     </span>
                                 </button>
                             </div>
-                        </div>
+                        </div>}
                     </div>
                 </div>
             </div>

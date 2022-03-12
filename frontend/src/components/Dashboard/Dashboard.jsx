@@ -1,10 +1,8 @@
 import React from 'react';
 import CookieManager from "./../../utils/CookieManager";
-import io from 'socket.io-client';
-import { faArrowPointer, faL } from "@fortawesome/free-solid-svg-icons";
+import { faArrowPointer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import 'codemirror/theme/dracula.css'
-import { axiosInstanceToAPI, baseWsURL } from '../../utils/serverAPI'
 import CodeMirror from 'codemirror'
 import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/dracula.css'
@@ -34,7 +32,7 @@ int main(){
     React.useEffect(() => {
         console.log('Connecting...');
         //console.log(socket);
-        const auxSocket = io(baseWsURL);
+        const auxSocket = props.socket;
 
         setSocket(auxSocket);
 
@@ -50,16 +48,16 @@ int main(){
             setPos({ x: pageX, y: pageY });
             setName(message.name);
         })//*/
-
+/*
         auxSocket.on('getname', () => {
             auxSocket.emit('getname', CookieManager.getCookie('jwt'));
-        })
+        })//*/
 
         auxSocket.on('compile', message => {
             setOutput(message);
         })
 
-        return () => auxSocket.close();
+        //return () => auxSocket.close();
     }, []);//*/
 
 
