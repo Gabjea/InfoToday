@@ -29,10 +29,17 @@ app.use(helmet());
 app.use(cors());
 
 const functions = require('./api/functions')
+const Message = require('./models/message')
+const mongoose = require('./database/index')
+
+let sockets = []
 
 io.on('connection', (socket) => {
+  
   socket.on("disconnect", (reason) => {
-    console.log(reason)
+    const delSocketIndex =sockets.findIndex((discSocket) => discSocket.socket_id === socket.id)
+    sockets.splice(delSocketIndex,1)
+    console.log(sockets);
   });
 
   let isName = false;
@@ -41,6 +48,8 @@ io.on('connection', (socket) => {
   socket.on('getname', async (token) => {
     socket.user = await functions.getUserByIdFromToken(token)
     isName = true
+    sockets.push({socket_id: socket.id, user_id: socket.user._id.toString()})
+    console.log(sockets);
   })
 
   socket.on('edit-code', data => {
@@ -50,6 +59,39 @@ io.on('connection', (socket) => {
   socket.on('edit-input', data => {
     socket.broadcast.emit('edit-input', data)
   })
+
+  socket.on('send-message',async data => {{
+    const sendToIndex =sockets.findIndex((sendTo) => sendTo.user_id === data.otherId)
+    const senderIndex = sockets.findIndex((sender) => sender.socket_id === socket.id)
+    
+    socket.to(sockets[sendToIndex].socket_id).emit('send-message',
+    {sender: sockets[senderIndex].user_id,
+     receiver: sockets[sendToIndex].user_id,
+     message : data.message
+    })
+
+    io.to(sockets[senderIndex].socket_id).emit('send-message',
+    {sender: sockets[senderIndex].user_id,
+     receiver: sockets[sendToIndex].user_id,
+     message : data.message
+    })
+
+    const newMessage = new Message({
+      _id: new mongoose.Types.ObjectId(),
+      sender: sockets[senderIndex].user_id,
+      receiver: sockets[sendToIndex].user_id,
+      message: data.message
+    });
+    const savedMessage = await newMessage.save().catch((err) => {
+        console.log("Error: ", err);
+        
+    });
+
+    if(savedMessage)
+      console.log("merge")
+
+  }})
+
 
 
   socket.on('compile', data => {
