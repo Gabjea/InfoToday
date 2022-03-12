@@ -17,24 +17,31 @@ export default function Sidebar({ socket }) {
     ];
 
     return (
-        <div className="flex" style={{ 'userSelect': 'none' }}>
+        
 
             <div
                 className={` ${open ? "w-50" : "w-20 "
-                    } bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 h-screen p-5  pt-8 relative duration-300`}
+                    }  bg-gradient-to-r from-purple-500 via-purple-600 to-purple-800 h-screen p-5`}
             >
+               
+                <div className={`duration-500 ${open ? "translate-x-full mr-5" : "ml-1"} ` }>
+
                 <FontAwesomeIcon
                     icon={open ? faXmark : faEllipsis}
-                    className={`absolute cursor-pointer left-2 top-2 w-6 h-6 border-none
-           border-2 rounded-full  ${!open && "rotate-180"}`}
+                    className={`cursor-pointer w-8 h-8 duration-500 
+                    ${open ? "rotate-[360deg] " : ""}`}
                     onClick={() => setOpen(!open)}
-                />
-                <br /><br />
-                <div className="flex gap-x-4 items-center w-15">
+                    />
+               
+                </div>
+                <br />
+                
+
+                <div className="flex gap-x-4 items-center w-15 ">
                     <FontAwesomeIcon
-                        size="3x"
+                        size= {open ? "3x" : "2x"} 
                         icon={faLaptopCode}
-                        className={`cursor-pointer duration-500 ${open && "rotate-[360deg] "
+                        className={`cursor-pointer duration-500 ${open && "rotate-[360deg] mr-5"
                             }`}
                     />
                     <h1
@@ -61,7 +68,7 @@ export default function Sidebar({ socket }) {
                 </ul>
             </div>
 
-        </div>
+        
 
 
 
