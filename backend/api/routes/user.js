@@ -19,7 +19,8 @@ router.get("/profile/:id",middlewares.Auth,controller.getUserProfileFromIdContro
 router.post("/profile/picture",middlewares.Auth,controller.uploadProfilePictureController)
 router.patch("/profile",middlewares.Auth,controller.updateUserProfileController)
 
-
+router.get('/chats',  middlewares.Auth, controller.getUserChats )
+router.get('/chat/:id', middlewares.Auth, controller.getUserMessagesFromPerson)
 
 
 module.exports = router
