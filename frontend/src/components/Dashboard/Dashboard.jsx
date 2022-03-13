@@ -8,6 +8,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/dracula.css'
 import 'codemirror/mode/clike/clike'
 import 'codemirror/keymap/sublime'
+import Problems from '../Problems/Problems';
 
 export default function Dashboard(props) {
     const startingCode = `#include<iostream>
@@ -218,6 +219,7 @@ int main(){
 
     return (
         <div style={{ 'overflow': 'hidden' }}>
+            {false && <Problems isSession={true} />}
             Dashboard!
             <br />
             <br />

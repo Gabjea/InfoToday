@@ -18,6 +18,10 @@ import { baseWsURL } from './utils/serverAPI';
 import io from 'socket.io-client';
 import CookieManager from "./utils/CookieManager";
 import Signout from "./components/Signout/Signout";
+import UploadPb from "./components/UploadPb/UploadPb";
+import Problems from "./components/Problems/Problems";
+import Problem from "./components/Problem/Problem";
+import RtcStream from "./components/RtcStream/RtcStream";
 const socket = io(baseWsURL);
 
 
@@ -35,9 +39,9 @@ export default function BasicExample() {
 
     return (
         <Router>
-            <div className="md:flex overflow-hidden">
+            <div className="md:flex">
                 <Sidebar socket={socket} />
-                <div className="w-screen h-screen ">
+                <div className="w-screen h-full ">
 
                     <Routes>
                         <Route index element={<Home />} />
@@ -49,6 +53,10 @@ export default function BasicExample() {
                         <Route path="/account" element={<Account />} />
                         <Route path="/messages" element={<Messages socket={socket} />}  />
                         <Route path="/signout" element={<Signout />} />
+                        <Route path="/upload-pb" element={<UploadPb />} />
+                        <Route path="/problems" element={<Problems />} />
+                        <Route path="/problem/:name" element={<Problem />} />
+                        <Route path="/rtc" element={<RtcStream socket={socket} />} />
                         <Route path="*" element={<Pg404 />} />
                     </Routes>
                 </div>
