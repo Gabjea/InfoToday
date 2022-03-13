@@ -39,7 +39,7 @@ io.on('connection', (socket) => {
   socket.on("disconnect", (reason) => {
     const delSocketIndex =sockets.findIndex((discSocket) => discSocket.socket_id === socket.id)
     sockets.splice(delSocketIndex,1)
-    console.log(sockets);
+    
   });
 
   let isName = false;
@@ -49,7 +49,7 @@ io.on('connection', (socket) => {
     socket.user = await functions.getUserByIdFromToken(token)
     isName = true
     sockets.push({socket_id: socket.id, user_id: socket.user._id.toString()})
-    console.log(sockets);
+    
   })
 
   socket.on('edit-code', data => {
@@ -64,23 +64,25 @@ io.on('connection', (socket) => {
     const sendToIndex =sockets.findIndex((sendTo) => sendTo.user_id === data.otherId)
     const senderIndex = sockets.findIndex((sender) => sender.socket_id === socket.id)
 
+    if(sockets[sendToIndex]){
 
-     socket.to(sockets[sendToIndex].socket_id).emit('send-message',
-     {sender: sockets[senderIndex].user_id,
-     receiver: sockets[sendToIndex].user_id,
-     message : data.message
-    })
+      socket.to(sockets[sendToIndex].socket_id).emit('send-message',
+      {sender: sockets[senderIndex].user_id,
+      receiver: sockets[sendToIndex].user_id,
+      message : data.message
+     })
+    }
 
     io.to(sockets[senderIndex].socket_id).emit('send-message',
     {sender: sockets[senderIndex].user_id,
-     receiver: sockets[sendToIndex].user_id,
+     receiver: data.otherId,
      message : data.message
     })
 
     const newMessage = new Message({
       _id: new mongoose.Types.ObjectId(),
       sender: sockets[senderIndex].user_id,
-      receiver: sockets[sendToIndex].user_id,
+      receiver: data.otherId,
       message: data.message
     });
     const savedMessage = await newMessage.save().catch((err) => {
@@ -95,7 +97,7 @@ io.on('connection', (socket) => {
 
 
   socket.on('compile', data => {
-    console.log(data.editorCode);
+    
     var post = JSON.stringify({
       "code": data.editorCode,
       "language": "cpp",
