@@ -22,5 +22,6 @@ router.patch("/profile",middlewares.Auth,controller.updateUserProfileController)
 router.get('/chats',  middlewares.Auth, controller.getUserChats )
 router.get('/chat/:id', middlewares.Auth, controller.getUserMessagesFromPerson)
 
+router.get('/problems', middlewares.Auth, controller.getAllProblems)
 
 module.exports = router

@@ -1,5 +1,6 @@
 const User = require("../../models/user");
 const Apply = require("../../models/apply");
+const Problem = require('../../models/problem')
 const mongoose = require("../../database");
 const functions = require('../functions/index')
 const jwtDecoder = require("jwt-decode");
@@ -87,11 +88,11 @@ const acceptApply = async(req, res) => {
 
         const students = teacher.students
         students.push(req.params.id)
+    }).clone()
 
         await User.findByIdAndUpdate(teacher_id, {students: students}, (err, result) =>{
             if (err) return res.send(err)
             res.send('')
-        }).clone()
 
       
     }).clone()
@@ -153,6 +154,30 @@ const deleteStudent = async(req, res) => {
     }).clone()
 }
 
+const addProblem = async (req,res) => {
+    const creator_id =  jwtDecoder(req.headers.authorization).id
+    const {name, category, text, tests} = req.body
+    
+    const newProblem = new Problem({
+        _id: new mongoose.Types.ObjectId(),
+        name,
+        category,
+        text,
+        creator: creator_id,
+        tests
+    });
+    const savedProblem = await newProblem.save().catch((err) => {
+        console.log("Error: ", err);
+        res.status(500).json({ error: "Nu ai putut posta problema!" });
+    });
+
+    if (savedProblem) {
+
+        res.status(200).send("Ai postat problema cu succes!")
+    }
+
+}
+
 
 module.exports = {
     applyToTeacher,
@@ -161,5 +186,6 @@ module.exports = {
     acceptApply,
     getAllStudents,
     declineApply,
-    deleteStudent
+    deleteStudent,
+    addProblem
 }

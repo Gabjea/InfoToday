@@ -1,6 +1,7 @@
 const User = require("../../models/user");
 const Apply = require('../../models/apply')
 const Message = require('../../models/message')
+const Problem = require('../../models/problem')
 const mongoose = require("../../database");
 const bcrypt = require("bcrypt");
 
@@ -198,7 +199,18 @@ const getUserMessagesFromPerson = async(req, res) => {
 
 }
 
+const getAllProblems = async(req, res) => {
 
+  const problems = await Problem.find({}, (err, result) => {
+    if (err) return res.send(err)
+
+  }).clone()
+  
+  console.log(problems)
+  
+  res.send(problems)
+
+}
 
 module.exports = {
   loginController,
@@ -211,5 +223,6 @@ module.exports = {
   getUploadedIcon,
   getUserProfileFromIdController,
   getUserChats,
-  getUserMessagesFromPerson
+  getUserMessagesFromPerson,
+  getAllProblems
 };
