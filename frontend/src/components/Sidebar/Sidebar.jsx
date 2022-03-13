@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBook, faXmark,
     faLaptopCode, faEllipsis,
-    faUser, faChartLine, faUserCheck, faComment
+    faUser, faChartLine, faUserCheck, faComment, faArrowRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import CookieManager from "./../../utils/CookieManager";
 
@@ -14,6 +14,7 @@ export default function Sidebar({ socket }) {
         { title: "Probleme", src: faBook, route: '/probleme' },
         { title: "Account", src: CookieManager.getCookie('jwt') ? faUserCheck : faUser, route: '/account' },
         { title: 'Messages', src: faComment, route: '/messages' },
+        { title: 'Sign out', src: faArrowRightFromBracket, route: '/signout', gap: true},
     ];
 
     return (
@@ -41,7 +42,7 @@ export default function Sidebar({ socket }) {
                     <FontAwesomeIcon
                         size= {open ? "3x" : "2x"} 
                         icon={faLaptopCode}
-                        className={`cursor-pointer duration-500 ${open && "rotate-[360deg] mr-5"
+                        className={`cursor-pointer duration-500 ${open && "rotate-[360deg] mr-2"
                             }`}
                     />
                     <h1
@@ -55,8 +56,8 @@ export default function Sidebar({ socket }) {
                     {Menus.map((Menu, index) => (
                         <li onClick={() => window.location.assign(Menu.route)}
                             key={index}
-                            className={`flex  rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-3 
-              ${Menu.gap ? "mt-9" : "mt-2"} ${Menu.route === window.location.pathname && "bg-light-white"
+                            className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-3 
+              ${Menu.gap ? "mt-10" : "mt-2"} ${Menu.route === window.location.pathname && "bg-light-white"
                                 } `}
                         >
                             <FontAwesomeIcon icon={Menu.src} size="2x" />

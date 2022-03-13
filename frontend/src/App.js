@@ -17,6 +17,7 @@ import Messages from "./components/Messages/Messages";
 import { baseWsURL } from './utils/serverAPI';
 import io from 'socket.io-client';
 import CookieManager from "./utils/CookieManager";
+import Signout from "./components/Signout/Signout";
 const socket = io(baseWsURL);
 
 
@@ -34,7 +35,7 @@ export default function BasicExample() {
 
     return (
         <Router>
-            <div className="md:flex">
+            <div className="md:flex overflow-hidden">
                 <Sidebar socket={socket} />
                 <div className="w-screen h-screen ">
 
@@ -47,6 +48,7 @@ export default function BasicExample() {
                         <Route path="/applies" element={<Applies />} />
                         <Route path="/account" element={<Account />} />
                         <Route path="/messages" element={<Messages socket={socket} />}  />
+                        <Route path="/signout" element={<Signout />} />
                         <Route path="*" element={<Pg404 />} />
                     </Routes>
                 </div>
