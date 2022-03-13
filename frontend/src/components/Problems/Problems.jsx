@@ -16,7 +16,7 @@ export default function Problems({ isSession }) {
     }, [])
 
     return (
-        <div className='px-6'>
+        <div className='px-6 py-10'>
             <p>Probleme:</p>
             {
                 problems.map(problem => <ProblemBox isSession={isSession} name={problem.name} text={problem.text} />)

@@ -39,9 +39,9 @@ export default function BasicExample() {
 
     return (
         <Router>
-            <div className="md:flex">
+            <div className="md:flex ">
                 <Sidebar socket={socket} />
-                <div className="w-screen h-full ">
+                <div className="w-screen ">
 
                     <Routes>
                         <Route index element={<Home />} />

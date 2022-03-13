@@ -19,10 +19,10 @@ export default function Sidebar({ socket }) {
 
     return (
         
-
+        
             <div
                 className={` ${open ? "w-50" : "w-20 "
-                    }  bg-gradient-to-r from-purple-500 via-purple-600 to-purple-800 h-screen p-5`}
+                    }  bg-gradient-to-r from-purple-500 via-purple-600 to-purple-800 min-h-screen p-5`}
             >
                
                 <div className={`duration-500 ${open ? "translate-x-full mr-5" : "ml-1"} ` }>
