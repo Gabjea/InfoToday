@@ -1,13 +1,18 @@
 import React from 'react';
-import { Link } from "react-router-dom"
 
-function ProblemBox({ name, text, isSession }) {
+export default function ProblemBox({ problem, setDisplayed }) {
+    const handleClick = event => {
+        event.preventDefault();
+        setDisplayed(problem.name);
+    }
+
     return (
-        <div>
-            {!isSession && <Link to={`/problem/${name}`}>{name}</Link>}
-            {isSession && <div>{name}, {text}</div> }
+        <div className='border border-gray-600'>
+            <button onClick={handleClick}><b style={{'color': 'blue', 'textDecoration': 'underline'}} className='text-xl'>
+                {problem.name}
+            </b></button>
+            <hr />
+            <p className='text-sm'>{problem.text}</p>
         </div>
     );
 }
-
-export default ProblemBox;

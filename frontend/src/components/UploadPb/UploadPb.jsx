@@ -2,7 +2,6 @@ import React from 'react';
 import { CATEGORIES } from '../../utils/constants';
 import { axiosAuthInstanceToAPI } from '../../utils/serverAPI';
 import useArrayRef from '../../utils/UseArrayRef';
-import Messages from '../Messages/Messages';
 import Test from './Test';
 const MIN_TESTS = 5, MAX_TESTS = 20;
 
