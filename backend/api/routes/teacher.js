@@ -15,6 +15,7 @@ router.post('/apply/decline/:id', middlewares.Auth ,controller.declineApply)
 router.get('/students', middlewares.Auth, controller.getAllStudents)
 router.delete('/student/:id', middlewares.Auth, controller.deleteStudent)
 
+router.post('/session/create', middlewares.Auth, controller.createSession)
 
 router.post('/problem/add', middlewares.Auth, controller.addProblem)
 

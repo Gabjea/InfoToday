@@ -7,8 +7,8 @@ const bcrypt = require("bcrypt");
 
 const functions = require("../functions");
 const jwtDecoder = require("jwt-decode");
-var axios = require('axios');
-const user = require("../../models/user");
+
+const Session = require("../../models/session");
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -38,7 +38,7 @@ const loginController = async (req, res) => {
 };
 
 const registerController = async (req, res) => {
-  const { name, surname, email, password , isTeacher} = req.body;
+  const { name, surname, email, password, isTeacher } = req.body;
   const alreadyExistsUser = await User.findOne({ email: email })
     .exec()
     .catch((err) => {
@@ -95,26 +95,26 @@ const updateUserProfileController = async (req, res) => {
   }
 }
 
-const getUserRole = async(req,res) => {
+const getUserRole = async (req, res) => {
   const user = await functions.getUserByIdFromToken(req.headers.authorization)
   res.send(user.role)
 }
 
 
 const getAllUserApplies = (req, res) => {
-  const student_id =  jwtDecoder(req.headers.authorization).id
+  const student_id = jwtDecoder(req.headers.authorization).id
 
-  Apply.find({student: student_id}, async(err, result) =>{
+  Apply.find({ student: student_id }, async (err, result) => {
     let applies_info = []
-    for(const apply of result){
+    for (const apply of result) {
       await User.findOne({ _id: apply.teacher }).then(teacher => {
-          applies_info.push({ id: teacher._id, name: teacher.name + " " + teacher.surname, pic: teacher.profile_pic, status: apply.status })
+        applies_info.push({ id: teacher._id, name: teacher.name + " " + teacher.surname, pic: teacher.profile_pic, status: apply.status })
       }).catch(err => {
-          console.log(err)
+        console.log(err)
       })
     }
-    
-    
+
+
     res.send(applies_info)
   })
 
@@ -127,19 +127,19 @@ const uploadProfilePictureController = async (req, res) => {
   try {
     const token = req.headers.authorization.split(' ')[1]
     const user = await functions.getUserByIdFromToken(token)
-    const path ='/uploads/icons/' + user._id + ".png"
-    const file = await functions.uploadFile(req.files,path,'png')
+    const path = '/uploads/icons/' + user._id + ".png"
+    const file = await functions.uploadFile(req.files, path, 'png')
 
     if (!file)
       res.send({
         status: false,
         message: 'Nicio poza nu a fost incarcata!'
       });
-      else {
-        await functions.updateUserProfile(token, { profile_pic: process.env.HOST + path })
-        console.log('caca');
-        res.status(200).json({ message: "Ti-ai actualizat poza de profil cu succes!" })
-      }
+    else {
+      await functions.updateUserProfile(token, { profile_pic: process.env.HOST + path })
+      console.log('caca');
+      res.status(200).json({ message: "Ti-ai actualizat poza de profil cu succes!" })
+    }
 
   } catch (err) {
     console.log(err)
@@ -153,7 +153,7 @@ const getUploadedIcon = (req, res) => {
   res.sendFile(req.params.img, { root: './uploads/icons' })
 }
 
-const getUserProfileFromIdController = async(req,res) => {
+const getUserProfileFromIdController = async (req, res) => {
   const id = req.params.id
   res.send(await User.findById(id).catch(
     (err) => {
@@ -162,22 +162,22 @@ const getUserProfileFromIdController = async(req,res) => {
   ))
 }
 
-const getUserChats = async(req, res) => {
-  const user_id =  jwtDecoder(req.headers.authorization).id
-  
+const getUserChats = async (req, res) => {
+  const user_id = jwtDecoder(req.headers.authorization).id
 
-  await Message.find({receiver: user_id}).distinct('sender', async(err, result) =>{
+
+  await Message.find({ receiver: user_id }).distinct('sender', async (err, result) => {
 
     let sender_info = []
-    for(const id of result){
+    for (const id of result) {
       await User.findOne({ _id: id }).then(sender => {
         sender_info.push({ id: sender._id, name: sender.name + " " + sender.surname, pic: sender.profile_pic })
       }).catch(err => {
-          console.log(err)
+        console.log(err)
       })
     }
-    
-    
+
+
     res.send(sender_info)
 
 
@@ -186,31 +186,57 @@ const getUserChats = async(req, res) => {
 
 }
 
-const getUserMessagesFromPerson = async(req, res) => {
-  const user_id =  jwtDecoder(req.headers.authorization).id
+const getUserMessagesFromPerson = async (req, res) => {
+  const user_id = jwtDecoder(req.headers.authorization).id
   const chattingWith = req.params.id
 
-  await Message.find({$or:[{sender: user_id, receiver:chattingWith},{sender: chattingWith, receiver:user_id}]}, (err, result) =>{
-    if(err) res.send(err)
-    
+  await Message.find({ $or: [{ sender: user_id, receiver: chattingWith }, { sender: chattingWith, receiver: user_id }] }, (err, result) => {
+    if (err) res.send(err)
+
 
     res.send(result)
   }).clone()
 
 }
 
-const getAllProblems = async(req, res) => {
+const getAllProblems = async (req, res) => {
 
   const problems = await Problem.find({}, (err, result) => {
     if (err) return res.send(err)
 
   }).clone()
-  
+
   console.log(problems)
-  
+
   res.send(problems)
 
 }
+
+const getAllUserSessions = async (req, res) => {
+  const user_id = jwtDecoder(req.headers.authorization).id
+  const user_role = jwtDecoder(req.headers.authorization).role
+
+  let sessions_info = []
+  const sessions = await Session.find({ $or: [{ student: user_id }, { teacher: user_id }] })
+
+  for (const session of sessions) {
+    let result = {}
+    if (user_role === 'student'){
+      result = await User.findById(session.teacher)
+
+    }
+    else{
+      result = await User.findById(session.student)
+    }
+    sessions_info.push({ session, pic: result.pic, name: result.name + ' ' + result.surname })
+  }
+
+
+  console.log(sessions_info)
+  res.send(sessions_info)
+
+}
+
 
 module.exports = {
   loginController,
@@ -224,5 +250,6 @@ module.exports = {
   getUserProfileFromIdController,
   getUserChats,
   getUserMessagesFromPerson,
-  getAllProblems
+  getAllProblems,
+  getAllUserSessions
 };

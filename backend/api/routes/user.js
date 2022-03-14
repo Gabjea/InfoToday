@@ -23,5 +23,5 @@ router.get('/chats',  middlewares.Auth, controller.getUserChats )
 router.get('/chat/:id', middlewares.Auth, controller.getUserMessagesFromPerson)
 
 router.get('/problems', middlewares.Auth, controller.getAllProblems)
-
+router.get('/sessions', middlewares.Auth, controller.getAllUserSessions)
 module.exports = router
