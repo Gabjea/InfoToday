@@ -4,6 +4,7 @@ const Problem = require('../../models/problem')
 const mongoose = require("../../database");
 const functions = require('../functions/index')
 const jwtDecoder = require("jwt-decode");
+const Session = require("../../models/session");
 const applyToTeacher = async (req, res) => {
 
     const student_id =  jwtDecoder(req.headers.authorization).id
@@ -182,6 +183,29 @@ const addProblem = async (req,res) => {
 
 }
 
+const createSession = async(req, res) => {
+    const teacher =  jwtDecoder(req.headers.authorization).id
+    const {startDate, endDate, studentId, cost} = req.body
+    
+    const newSession = new Session({
+        _id: new mongoose.Types.ObjectId(),
+        startDate,
+        endDate,
+        student: studentId,
+        cost,
+        teacher
+    });
+    const savedSession = await newSession.save().catch((err) => {
+        console.log("Error: ", err);
+        res.status(500).json({ error: "Nu ai putut crea sesiunea!" });
+    });
+
+    if (savedSession) {
+
+        res.status(200).send("Ai creat sesiunea cu succes!")
+    }
+}
+
 
 module.exports = {
     applyToTeacher,
@@ -191,5 +215,6 @@ module.exports = {
     getAllStudents,
     declineApply,
     deleteStudent,
-    addProblem
+    addProblem,
+    createSession
 }
