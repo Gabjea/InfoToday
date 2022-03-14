@@ -2,7 +2,7 @@ import { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBook, faXmark,
-    faLaptopCode, faEllipsis,
+    faLaptopCode, faEllipsis, faCalendarPlus,
     faUser, faChartLine, faUserCheck, faComment, faArrowRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import CookieManager from "./../../utils/CookieManager";
@@ -14,6 +14,7 @@ export default function Sidebar({ socket }) {
         { title: "Probleme", src: faBook, route: '/probleme' },
         { title: "Account", src: CookieManager.getCookie('jwt') ? faUserCheck : faUser, route: '/account' },
         { title: 'Messages', src: faComment, route: '/messages' },
+        { title: 'create session', src: faCalendarPlus, route: '/create-session' },
         { title: 'Sign out', src: faArrowRightFromBracket, route: '/signout', gap: true },
     ];
 

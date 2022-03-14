@@ -43,10 +43,6 @@ int main(){
             setPos({ x: pageX, y: pageY });
             setName(message.name);
         })//*/
-/*
-        auxSocket.on('getname', () => {
-            auxSocket.emit('getname', CookieManager.getCookie('jwt'));
-        })//*/
 
         auxSocket.on('compile', message => {
             setOutput(message);

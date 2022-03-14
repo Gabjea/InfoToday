@@ -21,20 +21,37 @@ import Signout from "./components/Signout/Signout";
 import UploadPb from "./components/UploadPb/UploadPb";
 import Problems from "./components/Problems/Problems";
 import RtcStream from "./components/RtcStream/RtcStream";
+import CreateSession from "./components/CreateSession/CreateSession";
 const socket = io(baseWsURL);
 
-
 export default function BasicExample() {
+    const [x, setX] = React.useState();
+
     React.useEffect(() => {
-        socket.on('getname', () => {
-            const jwt = CookieManager.getCookie('jwt');
-            if (jwt) {
-                socket.emit('getname', jwt);
-            }
+        socket.on('connected', message => {
+            //console.log(message);
+            setX(message);
         })
 
-        return () => socket.close();
+        socket.on('connect-user', message => {
+            //console.log(message);
+            const jwt = CookieManager.getCookie('jwt');
+            if (jwt) {
+                //console.log(jwt);
+                socket.emit('connect-user', jwt);
+            }
+        })
+        //console.log('here');
+
+        
+        return () => socket.close();//*/
     }, [])
+
+    React.useEffect(() => {
+        if (x) {
+            socket.emit('join-session', 'wuj');
+        }
+    }, [x])
 
     return (
         <Router>
@@ -44,17 +61,19 @@ export default function BasicExample() {
 
                     <Routes>
                         <Route index element={<Home />} />
-                        <Route path="/dashboard" element={<Dashboard  socket={socket} />}  />
+                        <Route path="/dashboard" element={<Dashboard socket={socket} />} />
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/teachers" element={<Teachers />} />
                         <Route path="/applies" element={<Applies />} />
                         <Route path="/account" element={<Account />} />
-                        <Route path="/messages" element={<Messages socket={socket} />}  />
+                        <Route path="/messages" element={<Messages socket={socket} />} />
                         <Route path="/signout" element={<Signout />} />
                         <Route path="/upload-pb" element={<UploadPb />} />
                         <Route path="/probleme" element={<Problems socket={socket} />} />
-                        <Route path="/rtc" element={<RtcStream socket={socket} />} />
+                        <Route path="/rtc" element={<RtcStream socket={socket} x={x} />} />
+                        <Route path="/create-session" element={<CreateSession />} />
+
                         <Route path="*" element={<Pg404 />} />
                     </Routes>
                 </div>
