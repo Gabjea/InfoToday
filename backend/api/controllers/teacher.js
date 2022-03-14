@@ -88,14 +88,18 @@ const acceptApply = async(req, res) => {
 
         const students = teacher.students
         students.push(req.params.id)
-    }).clone()
 
         await User.findByIdAndUpdate(teacher_id, {students: students}, (err, result) =>{
             if (err) return res.send(err)
             res.send('')
+    
+    
+          
+        }).clone()
 
-      
+
     }).clone()
+    
 }
 
 const getAllStudents = (req, res) => {

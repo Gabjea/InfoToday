@@ -30,6 +30,10 @@ const UserSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    cost: {
+        type: Number,
+        required: false,
+    },
     students: {
         type: Array,
         required: false,
