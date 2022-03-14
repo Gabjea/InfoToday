@@ -1,11 +1,13 @@
 import React from 'react';
 
-function RtcStream({socket}) {
+export default function RtcStream({ socket, x }) {
+    React.useEffect(() => {
+        //console.log(x);
+    }, [socket, x])
+
     return (
         <div>
             RtcStream
         </div>
     );
 }
-
-export default RtcStream;
