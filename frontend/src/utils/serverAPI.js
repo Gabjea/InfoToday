@@ -3,7 +3,7 @@ import CookieManager from "./CookieManager";
 
 //school: 192.168.0.132:5000
 //ganju's: 79.115.133.126:5000
-const host = '79.115.133.126:5000';
+const host = '192.168.0.132:5000';
 export const baseHttpURL = `http://${host}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
 export const baseWsURL = `ws://${host}`;

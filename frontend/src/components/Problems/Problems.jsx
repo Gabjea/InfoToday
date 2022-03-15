@@ -73,19 +73,20 @@ export default function Problems({ socket }) {
             <br />
             {(displayedPb && <Problem socket={socket} problem={problems.find(problem => problem.name === displayedPb)} />)
                 ||
-                <div>
+                <div className='px-6 py-10 '>
                     <p>Probleme:</p>
                     <input type="text" placeholder='search by name'
-                        className='border border-gray-600' onChange={handleInputChange} /> <br />
+                        className='appearance-none block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500' onChange={handleInputChange} /> <br />
                     Categorie:
-                    <select name="category" id="category" onChange={handleSelChange}>
+                    <select className=' block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md  px-4 leading-tight focus:outline-none  focus:border-gray-500' name="category" id="category" onChange={handleSelChange}>
                         {
-                            ['*', ...CATEGORIES].map(category => <option value={category}>{category}</option>)
+                            
+                            ['*', ...CATEGORIES].map(category => <option className='' value={category}>{category}</option>)
                         }
                     </select>
                     <br />
                     {
-                        problems.map(problem => <ProblemBox setDisplayed={setDisplayed} problem={problem} />)
+                        problems.map(problem => <div className='flex justify-center mb-5'><ProblemBox setDisplayed={setDisplayed} problem={problem} /> </div>)
                     }
                 </div>
             }
