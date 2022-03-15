@@ -2,7 +2,8 @@ import React from "react";
 import {
     BrowserRouter as Router,
     Routes,
-    Route
+    Route,
+    Navigate
 } from "react-router-dom";
 import Dashboard from "./components/Dashboard/Dashboard";
 import Home from "./components/Home/Home";
@@ -24,13 +25,13 @@ import RtcStream from "./components/RtcStream/RtcStream";
 import CreateSession from "./components/CreateSession/CreateSession";
 const socket = io(baseWsURL);
 
-export default function BasicExample() {
-    const [x, setX] = React.useState();
+export default function App() {
+    const [connected, setConnected] = React.useState();
 
     React.useEffect(() => {
         socket.on('connected', message => {
             //console.log(message);
-            setX(message);
+            setConnected(message);
         })
 
         socket.on('connect-user', message => {
@@ -48,10 +49,13 @@ export default function BasicExample() {
     }, [])
 
     React.useEffect(() => {
-        if (x) {
-            socket.emit('join-session', 'wuj');
+        if (connected) {
+            socket.emit('join-session', '');
         }
-    }, [x])
+    }, [connected])
+
+
+    const [isAuth] = React.useState(() => CookieManager.getCookie('jwt') != null);
 
     return (
         <Router>
@@ -61,18 +65,21 @@ export default function BasicExample() {
 
                     <Routes>
                         <Route index element={<Home />} />
-                        <Route path="/dashboard" element={<Dashboard socket={socket} />} />
+                        
+                        {<Route path="/dashboard" element={isAuth ? <Dashboard socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/teachers" element={isAuth ? <Teachers socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/applies" element={isAuth ? <Applies socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/account" element={isAuth ? <Account socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/messages" element={isAuth ? <Messages socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/upload-pb" element={isAuth ? <UploadPb socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/probleme" element={isAuth ? <Problems socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/create-session" element={isAuth ? <CreateSession socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {/* !auth */}
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
-                        <Route path="/teachers" element={<Teachers />} />
-                        <Route path="/applies" element={<Applies />} />
-                        <Route path="/account" element={<Account />} />
-                        <Route path="/messages" element={<Messages socket={socket} />} />
                         <Route path="/signout" element={<Signout />} />
-                        <Route path="/upload-pb" element={<UploadPb />} />
-                        <Route path="/probleme" element={<Problems socket={socket} />} />
-                        <Route path="/rtc" element={<RtcStream socket={socket} x={x} />} />
-                        <Route path="/create-session" element={<CreateSession />} />
+
+                        <Route path="/rtc" element={<RtcStream socket={socket} />} />
 
                         <Route path="*" element={<Pg404 />} />
                     </Routes>

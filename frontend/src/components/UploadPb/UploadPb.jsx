@@ -63,7 +63,7 @@ export default function UploadPb(props) {
                     className='border border-gray-500' />
                 {
                     [...Array(nrTests)].map(() => {
-                        return <div> <Test id={id++} refToInput={refInp} refToOutput={refOut} /> </div>
+                        return <div> <Test key={Math.random()} id={id++} refToInput={refInp} refToOutput={refOut} /> </div>
                     })
                 }
                 <br />
