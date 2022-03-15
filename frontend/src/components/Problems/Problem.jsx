@@ -28,7 +28,7 @@ function Problem({ problem, socket }) {
             </div>
             <div className=''>
 
-                <CodingGround socket={socket} />
+                <CodingGround pbName={problem.name} socket={socket} />
             </div>
 
         </div>

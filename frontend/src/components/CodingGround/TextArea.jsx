@@ -41,7 +41,7 @@ function TextArea({ socket, startVal, setEditorVal, mode, editorType }) {
                 if (startCol > endCol) {
                     [startCol, endCol] = [endCol, startCol]
                 }
-                socket.emit(`selection-${editorType}`, { startLine, startCol, endLine, endCol });
+                socket?.emit(`selection-${editorType}`, { startLine, startCol, endLine, endCol });
             }
 
         })//*/
@@ -49,17 +49,17 @@ function TextArea({ socket, startVal, setEditorVal, mode, editorType }) {
         editor.current.on(`change`, (instance, changes) => {
             const { origin } = changes;
             if (origin !== `setValue`) {
-                socket.emit(`edit-${editorType}`, instance.getValue());
+                socket?.emit(`edit-${editorType}`, instance.getValue());
                 setEditorVal(instance.getValue());
             }
         })
 
-        socket.on(`edit-${editorType}`, message => {
+        socket?.on(`edit-${editorType}`, message => {
             setEditorVal(message);
             editor.current.setValue(message);
         })
 
-        socket.on(`selection-${editorType}`, message => {
+        socket?.on(`selection-${editorType}`, message => {
             editor.current.markText(
                 { line: 0, ch: 0 },
                 { line: 1e9, ch: 1e9 },

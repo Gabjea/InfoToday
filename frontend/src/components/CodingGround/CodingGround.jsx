@@ -3,6 +3,8 @@ import { faArrowPointer } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import 'codemirror/theme/dracula.css'
 import MemoizedTextArea from './TextArea';
+import { axiosAuthInstanceToAPI } from '../../utils/serverAPI';
+import CookieManager from '../../utils/CookieManager';
 
 export default function CodingGround(props) {
     const startingCode = `#include<iostream>
@@ -24,11 +26,11 @@ int main(){
 
         setSocket(auxSocket);
 
-        auxSocket.on('connection', message => {
-            console.log(message);
+        auxSocket?.on('connection', message => {
+            console?.log(message);
         })
 
-        auxSocket.on('move-cursor', message => {
+        auxSocket?.on('move-cursor', message => {
             const { pageX, pageY } = message.pos;
             if (pageX > window.innerWidth - (5 / 100) * window.innerWidth || pageX < 0 || pageY > window.innerHeight || pageY < 0) {
                 //return;
@@ -37,18 +39,18 @@ int main(){
             setName(message.name);
         })//*/
 
-        auxSocket.on('compile', message => {
-            setOutput(message);
+        auxSocket?.on('compile', message => {
+            //setOutput(message);
         })
 
-        return () => auxSocket.close();
+        return () => auxSocket?.close();
     }, [props.socket]);//*/
 
     //---------------------------------------
     React.useEffect(() => {
         document.onmousemove = event => {
             const { pageX, pageY } = event;
-            props.socket.emit('move-cursor', ({ pageX, pageY }));
+            props.socket?.emit('move-cursor', ({ pageX, pageY }));
         }
     }, [props.socket])//*/
 
@@ -59,10 +61,22 @@ int main(){
 
     let [editorCode, setEditorCode] = React.useState(startingCode);
     let [input, setInput] = React.useState();
-    let [output, setOutput] = React.useState();
+
+    const [answers, setAnswers] = React.useState([]);
     const handleSubmit = event => {
         event.preventDefault();
-        socket.emit('compile', { editorCode, input });
+        if (socket == null) {
+            axiosAuthInstanceToAPI.post(`/user/problem/compile/${props.pbName}`, {
+                editorCode, input
+            }).then(res => {
+                //console.log(res.data);
+                setAnswers(res.data);
+            }, err => {
+                console.error(err);
+                //alert('ERROR!');
+            })
+        }
+        socket?.emit('compile', { editorCode, input, jwt: CookieManager.getCookie('jwt') });
     }
 
     return (
@@ -88,9 +102,13 @@ int main(){
                 <FontAwesomeIcon icon={faArrowPointer} />
                 <small style={{ 'overflow': 'hidden' }}> {name} </small>
             </div>
-            
+
             <hr />
-            <div>{output}</div>
+            <div>
+                {
+                    answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'}`}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div> )
+                }
+            </div>
             <button onClick={handleSubmit} id='submit-code'>submit</button>
         </div>
     );

@@ -7,7 +7,7 @@ const host = '79.115.133.126:5000';
 export const baseHttpURL = `http://${host}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
 export const baseWsURL = `ws://${host}`;
-const timeout = 2e3;
+const timeout = 30000e3;
 
 export const axiosInstanceToAPI = axios.create({
     baseURL: baseURLPref,
