@@ -3,7 +3,6 @@ import {
   getUserDataFromJwtReq,
   axiosAuthInstanceToAPI,
 } from "../../utils/serverAPI";
-import CookieManager from "./../../utils/CookieManager";
 
 export default function Account() {
   const [userData, setUserData] = React.useState(null);
@@ -21,13 +20,6 @@ export default function Account() {
         console.log(userData?.role);
         console.log('====================================');
     }, [userData])//*/
-
-  React.useEffect(() => {
-    if (!CookieManager.getCookie("jwt")) {
-      window.location.assign("/login");
-      return;
-    }
-  }, []);
 
   React.useEffect(() => {
     getUserDataFromJwtReq()
@@ -110,16 +102,16 @@ export default function Account() {
   
   return (
     <div className="px-6 py-10">
-      <h2 class="text-2xl text-gray-900 ml-3 mt-4">Setari cont</h2>
+      <h2 className="text-2xl text-gray-900 ml-3 mt-4">Setari cont</h2>
       <br />
       <form onSubmit={handleSubmitForm} className="border-t border-gray-400">
-        <div class="flex mt-4">
-          <div class="w-full md:w-1/2 mb-6 mr-4">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+        <div className="flex mt-4">
+          <div className="w-full md:w-1/2 mb-6 mr-4">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               nume
             </label>
             <input
-              class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
+              className="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
               ref={surnameRef}
               type="text"
               defaultValue={userData?.surname}
@@ -127,12 +119,12 @@ export default function Account() {
               placeholder="Nume"
             />
           </div>
-          <div class="w-full md:w-1/2 mb-6">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+          <div className="w-full md:w-1/2 mb-6">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               prenume
             </label>
             <input
-              class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
+              className="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
               ref={nameRef}
               type="text"
               defaultValue={userData?.name}
@@ -141,12 +133,12 @@ export default function Account() {
             />
           </div>
         </div>
-        <div class="w-full md:w-full mb-6">
-          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+        <div className="w-full md:w-full mb-6">
+          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             email
           </label>
           <input
-            class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
+            className="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
             ref={emailRef}
             type="email"
             defaultValue={userData?.email}
@@ -156,12 +148,12 @@ export default function Account() {
         </div>
 
         {userData?.role === "teacher" && (
-          <div class="w-full md:w-full mb-6">
-            <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+          <div className="w-full md:w-full mb-6">
+            <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
               Descriere
             </label>
             <textarea
-              class="bg-gray-100 px-4 rounded-md border leading-normal resize-none w-full h-20 py-2  shadow-inner border border-gray-400 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
+              className="bg-gray-100 px-4 rounded-md border leading-normal resize-none w-full h-20 py-2  shadow-inner border border-gray-400 font-medium placeholder-gray-700 focus:outline-none focus:bg-white"
               defaultValue={userData?.desc}
               ref={descRef}
               type="text"
@@ -171,12 +163,12 @@ export default function Account() {
           </div>
         )}
 
-        <div class="w-full md:w-full mb-6">
-          <label class="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
+        <div className="w-full md:w-full mb-6">
+          <label className="block uppercase tracking-wide text-gray-700 text-xs font-bold mb-2">
             parola
           </label>
           <input
-            class="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
+            className="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
             ref={passwordRef}
             type="password"
             name="psw"
@@ -184,10 +176,10 @@ export default function Account() {
           />
         </div>
 
-        <div class="flex justify-center">
+        <div className="flex justify-center">
           <button
             type="submit"
-            class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+            className="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
           >
             Salveaza
           </button>
@@ -196,7 +188,7 @@ export default function Account() {
 
       <br />
       <div className="">
-        <h2 class="text-2xl text-gray-900 ml-3 mt-4">Poza Profil</h2>
+        <h2 className="text-2xl text-gray-900 ml-3 mt-4">Poza Profil</h2>
         <br />
         <form
           className="border-t border-gray-400"
@@ -242,10 +234,10 @@ export default function Account() {
             </div>
           </div>
           <br />
-          <div class="flex justify-center">
+          <div className="flex justify-center">
             <button
               type="submit"
-              class="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
+              className="text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2"
             >
               Salveaza
             </button>

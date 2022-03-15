@@ -1,9 +1,9 @@
 import React from 'react';
 
-export default function RtcStream({ socket, x }) {
+export default function RtcStream({ socket }) {
     React.useEffect(() => {
         //console.log(x);
-    }, [socket, x])
+    }, [socket])
 
     return (
         <div>

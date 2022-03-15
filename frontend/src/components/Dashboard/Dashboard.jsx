@@ -1,15 +1,7 @@
 import React from 'react';
-import { formatDate } from '../../utils/DateTime';
 import { axiosAuthInstanceToAPI } from '../../utils/serverAPI';
-import CookieManager from "./../../utils/CookieManager";
 
 export default function Dashboard(props) {
-    React.useEffect(() => {
-        if (CookieManager.getCookie('jwt') == null) {
-            window.location.assign('/login');
-            return;
-        }
-    }, [])
 
     const [sessions, setSessions] = React.useState([]);
 
@@ -23,10 +15,18 @@ export default function Dashboard(props) {
     }, [])
 
     return (
-        <div style={{ 'overflow': 'hidden' }}>
+        <div style={{ 'overflow': 'hidden' }} className='text-lg'>
+            <p>Sesiuni viitoare:</p>
+
             {
-                sessions.map(session => <div key={session._id}>{session.name},
-                    {session.session.startDate}, {session.session.endDate} </div>)
+                sessions.map(session => <div
+                    className='w-1/2 lg:flex-row rounded overflow-hidden h-auto border border-gray-300 shadow shadow-lg'
+                    key={session._id}>
+                    <p>cu: <i>{'  '}{session.name}</i></p>
+                    <div>inteval: {'  '}
+                        {session.session.startDate} <span className='text-3xl'>&#8594;</span> {session.session.endDate}
+                    </div>
+                </div>)
             }
         </div>
     );

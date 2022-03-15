@@ -51,7 +51,7 @@ export default function Messages({ socket }) {
             setMessages(preMessages => [...preMessages, message]);
             //console.log(messages);
         })
-    }, []);
+    }, [socket]);
 
     const handleSendCLick = event => {
         event.preventDefault();
@@ -67,15 +67,15 @@ export default function Messages({ socket }) {
     }
 
     return (
-        <div class="flex h-screen antialiased text-gray-800">
-            <div class="flex flex-row h-full w-full overflow-x-hidden">
-                <div class="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
-                    <div class="flex flex-row items-center justify-center h-12 w-full">
+        <div className="flex h-screen antialiased text-gray-800">
+            <div className="flex flex-row h-full w-full overflow-x-hidden">
+                <div className="flex flex-col py-8 pl-6 pr-2 w-64 bg-white flex-shrink-0">
+                    <div className="flex flex-row items-center justify-center h-12 w-full">
                         <div
-                            class="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10"
+                            className="flex items-center justify-center rounded-2xl text-indigo-700 bg-indigo-100 h-10 w-10"
                         >
                             <svg
-                                class="w-6 h-6"
+                                className="w-6 h-6"
                                 fill="none"
                                 stroke="currentColor"
                                 viewBox="0 0 24 24"
@@ -89,33 +89,33 @@ export default function Messages({ socket }) {
                                 ></path>
                             </svg>
                         </div>
-                        <div class="ml-2 font-bold text-2xl">QuickChat</div>
+                        <div className="ml-2 font-bold text-2xl">QuickChat</div>
                     </div>
                     <div
-                        class="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
+                        className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
                     >
-                        <div class="h-20 w-20 rounded-full border overflow-hidden">
+                        <div className="h-20 w-20 rounded-full border overflow-hidden">
                             {currChatUserPic &&
                                 <img
                                     src={currChatUserPic}
                                     alt="Avatar"
-                                    class="h-full w-full"
+                                    className="h-full w-full"
                                 />}
                         </div>
-                        <div class="text-sm font-semibold mt-2">{otherName}</div>
-                        {currChatUserPic && <div class="flex flex-row items-center mt-3">
+                        <div className="text-sm font-semibold mt-2">{otherName}</div>
+                        {currChatUserPic && <div className="flex flex-row items-center mt-3">
                             <div
-                                class="flex flex-col justify-center h-4 w-8 rounded-full"
+                                className="flex flex-col justify-center h-4 w-8 rounded-full"
                             >
-                                <div class="h-3 w-3 bg-gradient-to-r from-green-400 via-green-500 to-green-600
+                                <div className="h-3 w-3 bg-gradient-to-r from-green-400 via-green-500 to-green-600
  rounded-full self-end mr-1"></div>
                             </div>
-                            <div class="leading-none text-xs">Active</div>
+                            <div className="leading-none text-xs">Active</div>
                         </div>}
                     </div>
-                    <div class="flex flex-col mt-8">
-                        <div class="flex flex-row items-center justify-between text-xs">
-                            <span class="font-bold">Conversations</span>
+                    <div className="flex flex-col mt-8">
+                        <div className="flex flex-row items-center justify-between text-xs">
+                            <span className="font-bold">Conversations</span>
                             <span
                                 className="flex items-center justify-center bg-gray-300 h-4 w-4 rounded-full"
                             >
@@ -189,7 +189,7 @@ export default function Messages({ socket }) {
                                         className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600"
                                     >
                                         <svg
-                                            class="w-6 h-6"
+                                            className="w-6 h-6"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"
@@ -205,14 +205,14 @@ export default function Messages({ socket }) {
                                     </button>
                                 </div>
                             </div>
-                            <div class="ml-4">
+                            <div className="ml-4">
                                 <button onClick={handleSendCLick}
-                                    class="bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
+                                    className="bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 flex items-center justify-center bg-indigo-500 hover:bg-indigo-600 rounded-xl text-white px-4 py-1 flex-shrink-0"
                                 >
                                     <span>Send</span>
-                                    <span class="ml-2">
+                                    <span className="ml-2">
                                         <svg
-                                            class="w-4 h-4 transform rotate-45 -mt-px"
+                                            className="w-4 h-4 transform rotate-45 -mt-px"
                                             fill="none"
                                             stroke="currentColor"
                                             viewBox="0 0 24 24"

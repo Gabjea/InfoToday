@@ -1,22 +1,36 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faBook, faXmark,
+    faBook, faXmark, faClipboard, faChalkboardTeacher,
     faLaptopCode, faEllipsis, faCalendarPlus,
     faUser, faChartLine, faUserCheck, faComment, faArrowRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import CookieManager from "./../../utils/CookieManager";
+import { getUserDataFromJwtReq } from "../../utils/serverAPI";
 
 export default function Sidebar({ socket }) {
     const [open, setOpen] = useState(false);
-    const Menus = [
+
+    const [Menus, setMenus] = React.useState([
         { title: "Dashboard", src: faChartLine, route: '/dashboard' },
         { title: "Probleme", src: faBook, route: '/probleme' },
         { title: "Account", src: CookieManager.getCookie('jwt') ? faUserCheck : faUser, route: '/account' },
-        { title: 'Messages', src: faComment, route: '/messages' },
-        { title: 'create session', src: faCalendarPlus, route: '/create-session' },
-        { title: 'Sign out', src: faArrowRightFromBracket, route: '/signout', gap: true },
-    ];
+        { title: 'Mesaje', src: faComment, route: '/messages' },
+        { title: 'Creaza sesiune', src: faCalendarPlus, route: '/create-session' },
+        { title: 'aplicari', src: faClipboard, route: '/applies' },
+        { title: 'Sign out', src: faArrowRightFromBracket, route: '/signout', gap: true }
+    ]);
+
+    React.useEffect(() => {
+        getUserDataFromJwtReq().then(({ role }) => {
+            if (role === 'student') {
+                setMenus(prev => {
+                    prev.splice(Menus.length - 1, 0, { title: 'Profesori', src: faChalkboardTeacher, route: '/teachers' });
+                    return prev;
+                })
+            }
+        });
+    }, [Menus])
 
     return (
         <div
@@ -41,6 +55,7 @@ export default function Sidebar({ socket }) {
                 <FontAwesomeIcon
                     size={open ? "3x" : "2x"}
                     icon={faLaptopCode}
+                    onClick={() => window.location.assign('/')}
                     className={`cursor-pointer duration-500 ${open && "rotate-[360deg] mr-2"
                         }`}
                 />

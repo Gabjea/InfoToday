@@ -111,15 +111,11 @@ const socket_io = (server) => {
         })
 
 
-        socket.on('selection', data => {
-
-
-            socket.broadcast.emit('selection', data)
+        socket.on('selection-code', data => {
+            socket.broadcast.emit('selection-code', data)
         })
 
         socket.on('selection-input', data => {
-
-
             socket.broadcast.emit('selection-input', data)
         })
 
@@ -139,8 +135,5 @@ const socket_io = (server) => {
 
 
 }
-
-
-
 
 module.exports = socket_io
