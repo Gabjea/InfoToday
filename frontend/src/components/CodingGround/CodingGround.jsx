@@ -21,6 +21,14 @@ int main(){
     let refToMov = React.createRef();
     let [pos, setPos] = React.useState({ x: 0, y: 0 });
     let [name, setName] = React.useState('');
+    const [winWidth, setWinWidth] = React.useState(window.innerWidth);
+
+    React.useEffect(() => {
+        window.addEventListener('resize', () => {
+            console.log('RES');
+            setWinWidth(window.innerWidth)
+        })
+    }, [])
 
     const [socket, setSocket] = React.useState(null);
     React.useEffect(() => {
@@ -96,7 +104,7 @@ int main(){
             mode: 'text',
         });
 
-        editor.setSize(window.innerWidth, 100);
+        editor.setSize(winWidth / 2, 100);
 
         editor.on('beforeSelectionChange', (instance, { ranges, origin, update }) => {
             if (origin === '*mouse') {
@@ -143,7 +151,7 @@ int main(){
             )
 
         })
-    }, [socket, runnedForInput])
+    }, [socket, runnedForInput, winWidth])
 
     const [runned, setRunned] = React.useState(false);
     React.useEffect(() => {
