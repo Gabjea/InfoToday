@@ -3,7 +3,7 @@ const User = require("../../models/user")
 const jwtDecoder = require("jwt-decode");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const axios = require('axios')
 
 const createAuthToken = (id, name, role) => {
     
@@ -90,11 +90,30 @@ const uploadFile = async(files,path,extension) => {
     }
 }
 
-
+const compileProblemTest = async(editorCode,input) =>{
+    var post = JSON.stringify({
+        "code": editorCode,
+        "language": "cpp",
+        "input": input !== null ? input : ''
+    });
+    
+    var config = {
+        method: 'post',
+        url: 'https://codexweb.netlify.app/.netlify/functions/enforceCode',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        data: post
+    };
+    const response = await axios(config)
+    
+    return response.data.output
+}
 
 module.exports = {
     getUserByIdFromToken,
     updateUserProfile,
     createAuthToken,
-    uploadFile
+    uploadFile,
+    compileProblemTest
 }
