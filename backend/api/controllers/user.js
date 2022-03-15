@@ -4,6 +4,8 @@ const Message = require('../../models/message')
 const Problem = require('../../models/problem')
 const mongoose = require("../../database");
 const bcrypt = require("bcrypt");
+const fs = require('fs')
+
 
 const functions = require("../functions");
 const jwtDecoder = require("jwt-decode");
@@ -237,6 +239,46 @@ const getAllUserSessions = async (req, res) => {
 
 }
 
+const compileProblem = async(req, res) => {
+  const user_id = jwtDecoder(req.headers.authorization).id
+  const numeProblema = req.params.nume
+
+  const {editorCode, input} = req.body
+  const path = './uploads/compile/' + numeProblema + ".cpp"
+  try {
+    fs.writeFile(path, editorCode, (err, file) =>{
+      if(err)
+        console.log(err);
+      
+        fs.readFile(path, (err, result) =>{
+          console.log(result);
+        })
+      
+
+      })
+      
+    
+
+
+
+    //const file = await functions.uploadFile(req.files, path, 'cpp')
+    //file written successfully
+  } catch (err) {
+    console.error(err)
+  }
+
+  
+  // const problema = await Problem.findOne({name: numeProblema})
+  // const tests = []
+  
+  // for(const test of problema.tests){
+  //   const output = await functions.compileProblemTest(editorCode,test.input)
+    
+  //   tests.push(test.output.trim() === output.trim())
+  // }
+  // res.send(tests)
+}
+
 
 module.exports = {
   loginController,
@@ -251,5 +293,6 @@ module.exports = {
   getUserChats,
   getUserMessagesFromPerson,
   getAllProblems,
-  getAllUserSessions
+  getAllUserSessions,
+  compileProblem
 };
