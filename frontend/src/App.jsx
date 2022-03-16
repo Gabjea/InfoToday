@@ -23,6 +23,7 @@ import UploadPb from "./components/UploadPb/UploadPb";
 import Problems from "./components/Problems/Problems";
 import RtcStream from "./components/RtcStream/RtcStream";
 import CreateSession from "./components/CreateSession/CreateSession";
+import AddMoney from './components/AddMoney/AddMoney';
 
 const socket = io(baseWsURL);
 
@@ -82,6 +83,7 @@ export default function App() {
                         <Route path="/signout" element={<Signout />} />
 
                         <Route path="/rtc" element={<RtcStream socket={socket} />} />
+                        {<Route path="/stripe" element={<AddMoney />} />}
 
 
                         <Route path="*" element={<Pg404 />} />
