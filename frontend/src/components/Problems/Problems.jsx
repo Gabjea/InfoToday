@@ -49,18 +49,28 @@ export default function Problems({ socket }) {
         setSelInp(category);
     }
 
+    const handleBackClick = event => {
+        event.preventDefault();
+        setDisplayed('');
+        setSrcInp('');
+        setSelInp('*');
+    }
+
     return (
         <div>
             <RtcStream />
             <hr />
-            {displayedPb && <button onClick={() => setDisplayed('')}
+            {displayedPb && <button onClick={handleBackClick}
                 className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded"
             >
                 back
             </button>}
             <hr />
             <br />
-            {(displayedPb && <Problem socket={socket} problem={problems.find(problem => problem.name === displayedPb)} />)
+            {(displayedPb && <Problem
+                socket={socket}
+                problem={problems.find(problem => problem.name === displayedPb)}
+            />)
                 ||
                 <div className='px-6 py-10 '>
                     <p>Probleme:</p>

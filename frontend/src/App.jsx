@@ -66,7 +66,7 @@ export default function App() {
                 <div className="w-screen ">
 
                     <Routes>
-                        <Route index element={<Home />} />
+                        {<Route index element={!isAuth ? <Home /> : <Navigate replace to="dashboard"/>} />}
                         
                         {<Route path="/dashboard" element={isAuth ? <Dashboard socket={socket} /> : <Navigate replace to="/login" />} />}
                         {<Route path="/teachers" element={isAuth ? <Teachers socket={socket} /> : <Navigate replace to="/login" />} />}
