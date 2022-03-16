@@ -225,11 +225,11 @@ const getAllUserSessions = async (req, res) => {
 
   for (const session of sessions) {
     let result = {}
-    if (user_role === 'student'){
+    if (user_role === 'student') {
       result = await User.findById(session.teacher)
 
     }
-    else{
+    else {
       result = await User.findById(session.student)
     }
     sessions_info.push({ session, pic: result.pic, name: result.name + ' ' + result.surname })
@@ -240,42 +240,39 @@ const getAllUserSessions = async (req, res) => {
   res.send(sessions_info)
 
 }
-const { spawn } = require("child_process");
 
-const compileProblem = async(req, res) => {
+
+const compileProblem = async (req, res) => {
   const user_id = jwtDecoder(req.headers.authorization).id
   const numeProblema = req.params.nume
 
-  const {editorCode, input} = req.body
-  const pathCode = './uploads/compile/' + numeProblema +'/' + user_id + ".cpp"
-  
-  const pathInput = './uploads/compile/' + numeProblema +'/'+ user_id+ '.txt'
-  try {
-    fs.writeFileSync(pathCode, editorCode);
-    const problema = await Problem.findOne({name: numeProblema})
-    const tests = []
-    for(const test of problema.tests){
+  const { editorCode, input } = req.body
+  const pathCode = './uploads/compile/' + numeProblema + '/' + user_id + ".cpp"
 
-      fs.writeFileSync(pathInput, test.input)
-      const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && g++ ${user_id}.cpp -o ${user_id} && ${user_id}.exe < ${user_id}.txt`)
-      
-      tests.push(stdout === test.output)
-      
-    }
-    
-    res.send(tests)
+  const pathInput = './uploads/compile/' + numeProblema + '/' + user_id + '.txt'
 
-  } catch (err) {
-    console.error(err)
+  fs.writeFileSync(pathCode, editorCode);
+  const problema = await Problem.findOne({ name: numeProblema })
+  const tests = []
+  for (const index in problema.tests) {
+
+    const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && g++ -O0 -c ${user_id}.cpp -o ${user_id} && ${user_id}.exe < ./inputs/${index}.txt`)
+    // console.log(stdout,problema.tests[index].input, problema.tests[index].output);
+    tests.push(stdout === problema.tests[index].output)
+
   }
 
-  
+  res.send(tests)
+
+
+
+
   // const problema = await Problem.findOne({name: numeProblema})
   // const tests = []
-  
+
   // for(const test of problema.tests){
   //   const output = await functions.compileProblemTest(editorCode,test.input)
-    
+
   //   tests.push(test.output.trim() === output.trim())
   // }
   // res.send(tests)
