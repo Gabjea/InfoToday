@@ -243,6 +243,7 @@ const getAllUserSessions = async (req, res) => {
 
 
 const compileProblem = async (req, res) => {
+  const startTime= new Date()
   const user_id = jwtDecoder(req.headers.authorization).id
   const numeProblema = req.params.nume
 
@@ -256,12 +257,13 @@ const compileProblem = async (req, res) => {
   const tests = []
   for (const index in problema.tests) {
 
-    const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && g++ -O0 -c ${user_id}.cpp -o ${user_id} && ${user_id}.exe < ./inputs/${index}.txt`)
-    // console.log(stdout,problema.tests[index].input, problema.tests[index].output);
-    tests.push(stdout === problema.tests[index].output)
+    const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && c++ -O3 ${user_id}.cpp -o ${user_id}.exe && ${user_id}.exe < ./inputs/${index}.txt`)
+    //console.log(stdout,problema.tests[index].input, problema.tests[index].output);
+    tests.push(stdout.trim() === problema.tests[index].output.trim())
 
   }
-
+ 
+  
   res.send(tests)
 
 
