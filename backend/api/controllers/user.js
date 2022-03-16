@@ -62,7 +62,7 @@ const registerController = async (req, res) => {
       email,
       password: hashedPassword,
       role: isTeacher ? 'teacher' : 'student',
-      subscription: false
+      coins: 0
     });
     const savedUser = await newUser.save().catch((err) => {
       console.log("Error: ", err);
@@ -71,6 +71,10 @@ const registerController = async (req, res) => {
 
     if (savedUser) {
       const jwtToken = functions.createAuthToken(savedUser._id, savedUser.name + " " + savedUser.surname, savedUser.role)
+      const customer = await stripe.customers.create({
+        id: savedUser.id,
+        name: savedUser.name + ' ' + savedUser.surname
+      });
       res.json({
         message: "Te-ai inregistrat cu succes",
         token: "Bearer " + jwtToken,
@@ -243,7 +247,7 @@ const getAllUserSessions = async (req, res) => {
 
 
 const compileProblem = async (req, res) => {
-  const startTime= new Date()
+  const startTime = new Date()
   const user_id = jwtDecoder(req.headers.authorization).id
   const numeProblema = req.params.nume
 
@@ -262,8 +266,8 @@ const compileProblem = async (req, res) => {
     tests.push(stdout.trim() === problema.tests[index].output.trim())
 
   }
- 
-  
+
+
   res.send(tests)
 
 
@@ -281,6 +285,39 @@ const compileProblem = async (req, res) => {
 }
 
 
+const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
+const buyCoins = async (req, res) => {
+  let { amount, id } = req.body
+  const user_id = jwtDecoder(req.headers.authorization).id
+	try {
+		const payment = await stripe.paymentIntents.create({
+			amount: 100*amount,
+			currency: "ron",
+			description: "Coins",
+			payment_method: id,
+			confirm: true
+		})
+		
+		
+    await User.findByIdAndUpdate(user_id,{coins:amount}).then(() =>{
+      res.json({
+        message: "Payment successful",
+        success: true
+      })
+    })
+
+
+	} catch (error) {
+		console.log("Error", error)
+		res.json({
+			message: "Payment failed",
+			success: false
+		})
+	}
+}
+
+
+
 module.exports = {
   loginController,
   registerController,
@@ -295,5 +332,6 @@ module.exports = {
   getUserMessagesFromPerson,
   getAllProblems,
   getAllUserSessions,
-  compileProblem
+  compileProblem,
+  buyCoins
 };

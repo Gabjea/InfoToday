@@ -26,4 +26,7 @@ router.post('/problem/compile/:nume', middlewares.Auth, controller.compileProble
 
 router.get('/problems', middlewares.Auth, controller.getAllProblems)
 router.get('/sessions', middlewares.Auth, controller.getAllUserSessions)
+
+router.post('/payment', middlewares.Auth, controller.buyCoins)
+
 module.exports = router
