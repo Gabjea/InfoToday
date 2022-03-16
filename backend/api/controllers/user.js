@@ -11,6 +11,8 @@ const functions = require("../functions");
 const jwtDecoder = require("jwt-decode");
 
 const Session = require("../../models/session");
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 const loginController = async (req, res) => {
   const { email, password } = req.body;
@@ -238,31 +240,31 @@ const getAllUserSessions = async (req, res) => {
   res.send(sessions_info)
 
 }
+const { spawn } = require("child_process");
 
 const compileProblem = async(req, res) => {
   const user_id = jwtDecoder(req.headers.authorization).id
   const numeProblema = req.params.nume
 
   const {editorCode, input} = req.body
-  const path = './uploads/compile/' + numeProblema + ".cpp"
+  const pathCode = './uploads/compile/' + numeProblema +'/' + user_id + ".cpp"
+  
+  const pathInput = './uploads/compile/' + numeProblema +'/'+ user_id+ '.txt'
   try {
-    fs.writeFile(path, editorCode, (err, file) =>{
-      if(err)
-        console.log(err);
-      
-        fs.readFile(path, (err, result) =>{
-          console.log(result);
-        })
-      
+    fs.writeFileSync(pathCode, editorCode);
+    const problema = await Problem.findOne({name: numeProblema})
+    const tests = []
+    for(const test of problema.tests){
 
-      })
+      fs.writeFileSync(pathInput, test.input)
+      const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && g++ ${user_id}.cpp -o ${user_id} && ${user_id}.exe < ${user_id}.txt`)
       
+      tests.push(stdout === test.output)
+      
+    }
     
+    res.send(tests)
 
-
-
-    //const file = await functions.uploadFile(req.files, path, 'cpp')
-    //file written successfully
   } catch (err) {
     console.error(err)
   }
