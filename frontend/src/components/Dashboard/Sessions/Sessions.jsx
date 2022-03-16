@@ -7,7 +7,7 @@ function Sessions(props) {
 
     React.useEffect(() => {
         axiosAuthInstanceToAPI.get('/user/sessions').then(res => {
-            console.log(res.data);
+            //console.log(res.data);
             setSessions(res.data);
         }, err => {
             alert("ERROR!");

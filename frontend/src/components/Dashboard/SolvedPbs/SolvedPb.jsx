@@ -7,7 +7,7 @@ function SolvedPb({ problem }) {
 
     React.useEffect(() => {
         const idx = Math.floor(problem.score / (100 / (ProcToColor.length - 1)));
-        console.log(String(ProcToColor[idx]));
+        //console.log(String(ProcToColor[idx]));
         pbBoxRef.current.classList.add(`bg-${String(ProcToColor[idx])}-400`);
     }, [pbBoxRef, problem.score])
 
