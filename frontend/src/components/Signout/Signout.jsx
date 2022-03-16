@@ -4,8 +4,7 @@ import CookieManager from "./../../utils/CookieManager";
 export default function Signout()  {
 
     React.useEffect(() => {
-        document.cookie =
-        "jwt=; Max-Age=0; path=/; domain=" + window.location.hostname;
+        CookieManager.deleteCookie('jwt');
         window.location.reload();
     })
     React.useEffect(() => {

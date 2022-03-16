@@ -194,7 +194,7 @@ export default function Account() {
           className="border-t border-gray-400"
           onSubmit={handleImgSubm}
           method="POST"
-          enctype="multipart/form-data"
+          encType="multipart/form-data"
         >
           <br />
           <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md">
