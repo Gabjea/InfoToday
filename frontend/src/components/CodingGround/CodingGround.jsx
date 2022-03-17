@@ -70,10 +70,10 @@ int main(){
                 editorCode, input
             }).then(res => {
                 //console.log(res.data);
-                setAnswers(res.data);
+                setAnswers(res.data.ans);
             }, err => {
                 console.error(err);
-                //alert('ERROR!');
+                alert('ERROR!');
             })
         }
         socket?.emit('compile', { editorCode, input, jwt: CookieManager.getCookie('jwt') });
