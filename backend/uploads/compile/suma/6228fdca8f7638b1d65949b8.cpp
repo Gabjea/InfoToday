@@ -3,9 +3,9 @@ using namespace std;
 
 int main(){
     //add your code here
-  	int a, b;
-  	cin >> a >> b;
-  	cout << a + b << endl;
+  	int x, y;
+  	cin >> x >> y;
+  	cout << x +  y;
     return 0;
 }
     

@@ -22,10 +22,7 @@ const ProblemSchema = mongoose.Schema({
         type: Array,
         required: true
     },
-    submits: {
-        type: Array,
-        default: []
-    } 
+
 })
 
 module.exports = mongoose.model('Problem', ProblemSchema)

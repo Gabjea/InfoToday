@@ -22,7 +22,7 @@ export default function Register() {
         axiosInstanceToAPI.post("/user/register", {
             name, surname, email, password, isTeacher: inputCheckRef.current.checked
         }).then(res => {
-            CookieManager.setCookie('jwt', res.data.token);
+            CookieManager.setCookie('jwt', res.data.token, 86400);
             window.location.assign('/dashboard');
         }, err => {
             alert('register failed!');

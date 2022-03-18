@@ -16,7 +16,7 @@ export default function Login() {
             email, password
         }).then(res => {
             //console.log(res.data);
-            CookieManager.setCookie('jwt', res.data.token);
+            CookieManager.setCookie('jwt', res.data.token, 86400);
             window.location.assign('/dashboard');
         }, err => {
             alert('login failed!');
@@ -88,9 +88,6 @@ export default function Login() {
                             </div>
 
                             <div className="text-sm">
-                                <a href="#" className="font-medium text-indigo-600 hover:text-indigo-500">
-                                    Forgot your password?
-                                </a>
                             </div>
                         </div>
 

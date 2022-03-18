@@ -25,6 +25,7 @@ router.get('/chat/:id', middlewares.Auth, controller.getUserMessagesFromPerson)
 router.post('/problem/compile/:nume', middlewares.Auth, controller.compileProblem )
 
 router.get('/problems', middlewares.Auth, controller.getAllProblems)
+router.get('/problems/mine', middlewares.Auth, controller.getMyProblems)
 router.get('/sessions', middlewares.Auth, controller.getAllUserSessions)
 
 router.post('/payment', middlewares.Auth, controller.buyCoins)

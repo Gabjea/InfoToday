@@ -2,6 +2,7 @@ const User = require("../../models/user");
 const Apply = require('../../models/apply')
 const Message = require('../../models/message')
 const Problem = require('../../models/problem')
+const Submit = require('../../models/submit')
 const mongoose = require("../../database");
 const bcrypt = require("bcrypt");
 const fs = require('fs')
@@ -15,116 +16,116 @@ const util = require('util');
 const exec = util.promisify(require('child_process').exec);
 
 const loginController = async (req, res) => {
-  const { email, password } = req.body;
+    const { email, password } = req.body;
 
-  const userWithEmail = await User.findOne({ email: email }).catch((err) => {
-    console.log("Error: ", err);
-  });
-
-  if (!userWithEmail)
-    return res
-      .status(400)
-      .json({ message: "Email-ul sau parola sunt incorecte!" });
-
-  bcrypt.compare(password, userWithEmail.password, function (err, result) {
-    if (err || !result)
-      return res
-        .status(406)
-        .json({ error: "Email-ul sau parola sunt incorecte!" });
-
-    const jwtToken = functions.createAuthToken(userWithEmail._id, userWithEmail.name + " " + userWithEmail.surname, userWithEmail.role)
-    res.json({
-      message: "Te-ai autentificat cu succes!",
-      token: "Bearer " + jwtToken,
+    const userWithEmail = await User.findOne({ email: email }).catch((err) => {
+        console.log("Error: ", err);
     });
 
-  });
+    if (!userWithEmail)
+        return res
+            .status(400)
+            .json({ message: "Email-ul sau parola sunt incorecte!" });
+
+    bcrypt.compare(password, userWithEmail.password, function (err, result) {
+        if (err || !result)
+            return res
+                .status(406)
+                .json({ error: "Email-ul sau parola sunt incorecte!" });
+
+        const jwtToken = functions.createAuthToken(userWithEmail._id, userWithEmail.name + " " + userWithEmail.surname, userWithEmail.role)
+        res.json({
+            message: "Te-ai autentificat cu succes!",
+            token: "Bearer " + jwtToken,
+        });
+
+    });
 };
 
 const registerController = async (req, res) => {
-  const { name, surname, email, password, isTeacher } = req.body;
-  const alreadyExistsUser = await User.findOne({ email: email })
-    .exec()
-    .catch((err) => {
-      console.log("Error: ", err);
-    });
+    const { name, surname, email, password, isTeacher } = req.body;
+    const alreadyExistsUser = await User.findOne({ email: email })
+        .exec()
+        .catch((err) => {
+            console.log("Error: ", err);
+        });
 
-  if (alreadyExistsUser) {
-    return res.status(406).json({ message: "Acest email este deja folosit!" });
-  }
-  const passwordSalt = 10;
-  bcrypt.hash(password, passwordSalt, async function (err, hashedPassword) {
-    const newUser = new User({
-      _id: new mongoose.Types.ObjectId(),
-      name,
-      surname,
-      profile_pic: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
-      email,
-      password: hashedPassword,
-      role: isTeacher ? 'teacher' : 'student',
-      coins: 0
-    });
-    const savedUser = await newUser.save().catch((err) => {
-      console.log("Error: ", err);
-      res.status(500).json({ error: "Inregistrarea a esuat!" });
-    });
-
-    if (savedUser) {
-      const jwtToken = functions.createAuthToken(savedUser._id, savedUser.name + " " + savedUser.surname, savedUser.role)
-      const customer = await stripe.customers.create({
-        id: savedUser.id,
-        name: savedUser.name + ' ' + savedUser.surname
-      });
-      res.json({
-        message: "Te-ai inregistrat cu succes",
-        token: "Bearer " + jwtToken,
-      });
+    if (alreadyExistsUser) {
+        return res.status(406).json({ message: "Acest email este deja folosit!" });
     }
-  });
+    const passwordSalt = 10;
+    bcrypt.hash(password, passwordSalt, async function (err, hashedPassword) {
+        const newUser = new User({
+            _id: new mongoose.Types.ObjectId(),
+            name,
+            surname,
+            profile_pic: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+            email,
+            password: hashedPassword,
+            role: isTeacher ? 'teacher' : 'student',
+            coins: 0
+        });
+        const savedUser = await newUser.save().catch((err) => {
+            console.log("Error: ", err);
+            res.status(500).json({ error: "Inregistrarea a esuat!" });
+        });
+
+        if (savedUser) {
+            const jwtToken = functions.createAuthToken(savedUser._id, savedUser.name + " " + savedUser.surname, savedUser.role)
+            const customer = await stripe.customers.create({
+                id: savedUser.id,
+                name: savedUser.name + ' ' + savedUser.surname
+            });
+            res.json({
+                message: "Te-ai inregistrat cu succes",
+                token: "Bearer " + jwtToken,
+            });
+        }
+    });
 };
 
 
 
 const getUserProfileController = async (req, res) => {
-  const token = req.headers.authorization.split(" ")[1]
-  res.send(await functions.getUserByIdFromToken(token));
+    const token = req.headers.authorization.split(" ")[1]
+    res.send(await functions.getUserByIdFromToken(token));
 };
 
 const updateUserProfileController = async (req, res) => {
-  try {
-    const token = req.headers.authorization.split(" ")[1]
-    await functions.updateUserProfile(token, req.body)
-    res.status(200).json({ message: "Ti-ai actualizat profilul cu succes!" });
+    try {
+        const token = req.headers.authorization.split(" ")[1]
+        await functions.updateUserProfile(token, req.body)
+        res.status(200).json({ message: "Ti-ai actualizat profilul cu succes!" });
 
-  } catch {
-    res
-      .status(406)
-      .json({ error: "Actualizare nereusita!" });
-  }
+    } catch {
+        res
+            .status(406)
+            .json({ error: "Actualizare nereusita!" });
+    }
 }
 
 const getUserRole = async (req, res) => {
-  const user = await functions.getUserByIdFromToken(req.headers.authorization)
-  res.send(user.role)
+    const user = await functions.getUserByIdFromToken(req.headers.authorization)
+    res.send(user.role)
 }
 
 
 const getAllUserApplies = (req, res) => {
-  const student_id = jwtDecoder(req.headers.authorization).id
+    const student_id = jwtDecoder(req.headers.authorization).id
 
-  Apply.find({ student: student_id }, async (err, result) => {
-    let applies_info = []
-    for (const apply of result) {
-      await User.findOne({ _id: apply.teacher }).then(teacher => {
-        applies_info.push({ id: teacher._id, name: teacher.name + " " + teacher.surname, pic: teacher.profile_pic, status: apply.status })
-      }).catch(err => {
-        console.log(err)
-      })
-    }
+    Apply.find({ student: student_id }, async (err, result) => {
+        let applies_info = []
+        for (const apply of result) {
+            await User.findOne({ _id: apply.teacher }).then(teacher => {
+                applies_info.push({ id: teacher._id, name: teacher.name + " " + teacher.surname, pic: teacher.profile_pic, status: apply.status })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
 
 
-    res.send(applies_info)
-  })
+        res.send(applies_info)
+    })
 
 }
 
@@ -132,206 +133,265 @@ const getAllUserApplies = (req, res) => {
 
 const uploadProfilePictureController = async (req, res) => {
 
-  try {
-    const token = req.headers.authorization.split(' ')[1]
-    const user = await functions.getUserByIdFromToken(token)
-    const path = '/uploads/icons/' + user._id + ".png"
-    const file = await functions.uploadFile(req.files, path, 'png')
+    try {
+        const token = req.headers.authorization.split(' ')[1]
+        const user = await functions.getUserByIdFromToken(token)
+        const path = '/uploads/icons/' + user._id + ".png"
+        const file = await functions.uploadFile(req.files, path, 'png')
 
-    if (!file)
-      res.send({
-        status: false,
-        message: 'Nicio poza nu a fost incarcata!'
-      });
-    else {
-      await functions.updateUserProfile(token, { profile_pic: process.env.HOST + path })
-      console.log('caca');
-      res.status(200).json({ message: "Ti-ai actualizat poza de profil cu succes!" })
+        if (!file)
+            res.send({
+                status: false,
+                message: 'Nicio poza nu a fost incarcata!'
+            });
+        else {
+            await functions.updateUserProfile(token, { profile_pic: process.env.HOST + path })
+            console.log('caca');
+            res.status(200).json({ message: "Ti-ai actualizat poza de profil cu succes!" })
+        }
+
+    } catch (err) {
+        console.log(err)
+        res.status(500).send(err);
     }
-
-  } catch (err) {
-    console.log(err)
-    res.status(500).send(err);
-  }
 }
 
 
 const getUploadedIcon = (req, res) => {
 
-  res.sendFile(req.params.img, { root: './uploads/icons' })
+    res.sendFile(req.params.img, { root: './uploads/icons' })
 }
 
 const getUserProfileFromIdController = async (req, res) => {
-  const id = req.params.id
-  res.send(await User.findById(id).catch(
-    (err) => {
-      console.log("Error: ", err);
-    }
-  ))
+    const id = req.params.id
+    res.send(await User.findById(id).catch(
+        (err) => {
+            console.log("Error: ", err);
+        }
+    ))
 }
 
 const getUserChats = async (req, res) => {
-  const user_id = jwtDecoder(req.headers.authorization).id
+    const user_id = jwtDecoder(req.headers.authorization).id
 
 
-  await Message.find({ receiver: user_id }).distinct('sender', async (err, result) => {
+    await Message.find({ receiver: user_id }).distinct('sender', async (err, result) => {
 
-    let sender_info = []
-    for (const id of result) {
-      await User.findOne({ _id: id }).then(sender => {
-        sender_info.push({ id: sender._id, name: sender.name + " " + sender.surname, pic: sender.profile_pic })
-      }).catch(err => {
-        console.log(err)
-      })
-    }
-
-
-    res.send(sender_info)
+        let sender_info = []
+        for (const id of result) {
+            await User.findOne({ _id: id }).then(sender => {
+                sender_info.push({ id: sender._id, name: sender.name + " " + sender.surname, pic: sender.profile_pic })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
 
 
+        res.send(sender_info)
 
-  }).clone()
+
+
+    }).clone()
 
 }
 
 const getUserMessagesFromPerson = async (req, res) => {
-  const user_id = jwtDecoder(req.headers.authorization).id
-  const chattingWith = req.params.id
+    const user_id = jwtDecoder(req.headers.authorization).id
+    const chattingWith = req.params.id
 
-  await Message.find({ $or: [{ sender: user_id, receiver: chattingWith }, { sender: chattingWith, receiver: user_id }] }, (err, result) => {
-    if (err) res.send(err)
+    await Message.find({ $or: [{ sender: user_id, receiver: chattingWith }, { sender: chattingWith, receiver: user_id }] }, (err, result) => {
+        if (err) res.send(err)
 
 
-    res.send(result)
-  }).clone()
+        res.send(result)
+    }).clone()
 
 }
 
 const getAllProblems = async (req, res) => {
 
-  const problems = await Problem.find({}, (err, result) => {
-    if (err) return res.send(err)
+    const problems = await Problem.find({}, (err, result) => {
+        if (err) return res.send(err)
 
-  }).clone()
+    }).clone()
 
-  console.log(problems)
+    console.log(problems)
 
-  res.send(problems)
+    res.send(problems)
 
 }
 
 const getAllUserSessions = async (req, res) => {
-  const user_id = jwtDecoder(req.headers.authorization).id
-  const user_role = jwtDecoder(req.headers.authorization).role
+    const user_id = jwtDecoder(req.headers.authorization).id
+    const user_role = jwtDecoder(req.headers.authorization).role
 
-  let sessions_info = []
-  const sessions = await Session.find({ $or: [{ student: user_id }, { teacher: user_id }] })
+    let sessions_info = []
+    const sessions = await Session.find({ $or: [{ student: user_id }, { teacher: user_id }] })
 
-  for (const session of sessions) {
-    let result = {}
-    if (user_role === 'student') {
-      result = await User.findById(session.teacher)
+    for (const session of sessions) {
+        let result = {}
+        if (user_role === 'student') {
+            result = await User.findById(session.teacher)
 
+        }
+        else {
+            result = await User.findById(session.student)
+        }
+        sessions_info.push({ session, pic: result.pic, name: result.name + ' ' + result.surname })
     }
-    else {
-      result = await User.findById(session.student)
-    }
-    sessions_info.push({ session, pic: result.pic, name: result.name + ' ' + result.surname })
-  }
 
 
-  console.log(sessions_info)
-  res.send(sessions_info)
+    console.log(sessions_info)
+    res.send(sessions_info)
 
 }
 
 
 const compileProblem = async (req, res) => {
-  const startTime = new Date()
-  const user_id = jwtDecoder(req.headers.authorization).id
-  const numeProblema = req.params.nume
+    const startTime = new Date()
+    const user_id = jwtDecoder(req.headers.authorization).id
+    const numeProblema = req.params.nume
 
-  const { editorCode, input } = req.body
-  const pathCode = './uploads/compile/' + numeProblema + '/' + user_id + ".cpp"
+    const { editorCode, input } = req.body
+    const pathCode = './uploads/compile/' + numeProblema + '/' + user_id + ".cpp"
 
-  const pathInput = './uploads/compile/' + numeProblema + '/' + user_id + '.txt'
+    const pathInput = './uploads/compile/' + numeProblema + '/' + user_id + '.txt'
 
-  fs.writeFileSync(pathCode, editorCode);
-  const problema = await Problem.findOne({ name: numeProblema })
-  const tests = []
-  for (const index in problema.tests) {
+    fs.writeFileSync(pathCode, editorCode);
+    const problema = await Problem.findOne({ name: numeProblema })
+    const tests = []
+    let compileErr = ''
+    try {
 
-    const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && c++ -O3 ${user_id}.cpp -o ${user_id}.exe && ${user_id}.exe < ./inputs/${index}.txt`)
-    //console.log(stdout,problema.tests[index].input, problema.tests[index].output);
-    tests.push(stdout.trim() === problema.tests[index].output.trim())
+        for (const index in problema.tests) {
 
-  }
+            const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && c++ -O3 ${user_id}.cpp -o ${user_id}.exe && ${user_id}.exe < ./inputs/${index}.txt`)
+
+            tests.push(stdout?.trim() === problema.tests[index].output.trim() ? 100 / problema.tests.length : 0)
+
+            //console.log(stdout,problema.tests[index].input, problema.tests[index].output);
+
+        }
+        console.log(tests);
+        const score = tests.reduce((x, y) => x + y)
+        const newSubmit = new Submit({
+            _id: new mongoose.Types.ObjectId(),
+            problem: problema._id,
+            user: user_id,
+            score: score
+        });
+        const savedSubmit = await newSubmit.save().catch((err) => {
+            console.log("Error: ", err);
+            res.status(500).json({ error: "Evaluarea a esuat!" });
+        });
+
+        if (savedSubmit) {
+
+            res.send({ ans: tests, err: '', score })
+        }
 
 
-  res.send(tests)
 
 
+    } catch (err) {
+        console.log(err.stderr);
+        const newSubmit = new Submit({
+            _id: new mongoose.Types.ObjectId(),
+            problem: problema._id,
+            user: user_id,
+            score: 0
+        });
+        const savedSubmit = await newSubmit.save().catch((err) => {
+            console.log("Error: ", err);
+            res.status(500).json({ error: "Evaluarea a esuat!" });
+        });
+
+        if (savedSubmit) {
 
 
-  // const problema = await Problem.findOne({name: numeProblema})
-  // const tests = []
+            res.send({ ans: new Array(problema.tests.length).fill(false), err: err.stderr, score: 0 })
+        }
+    }
 
-  // for(const test of problema.tests){
-  //   const output = await functions.compileProblemTest(editorCode,test.input)
 
-  //   tests.push(test.output.trim() === output.trim())
-  // }
-  // res.send(tests)
+    // const problema = await Problem.findOne({name: numeProblema})
+    // const tests = []
+
+    // for(const test of problema.tests){
+    //   const output = await functions.compileProblemTest(editorCode,test.input)
+
+    //   tests.push(test.output.trim() === output.trim())
+    // }
+    // res.send(tests)
 }
 
 
 const stripe = require("stripe")(process.env.STRIPE_PRIVATE_KEY)
 const buyCoins = async (req, res) => {
-  let { amount, id } = req.body
-  const user_id = jwtDecoder(req.headers.authorization).id
-	try {
-		const payment = await stripe.paymentIntents.create({
-			amount: 100*amount,
-			currency: "ron",
-			description: "Coins",
-			payment_method: id,
-			confirm: true
-		})
-		
-		
-    await User.findByIdAndUpdate(user_id,{coins:amount}).then(() =>{
-      res.json({
-        message: "Payment successful",
-        success: true
-      })
-    })
+    let { amount, id } = req.body
+    const user_id = jwtDecoder(req.headers.authorization).id
+    try {
+        const payment = await stripe.paymentIntents.create({
+            amount: 100 * amount,
+            currency: "ron",
+            description: "Coins",
+            payment_method: id,
+            confirm: true
+        })
 
 
-	} catch (error) {
-		console.log("Error", error)
-		res.json({
-			message: "Payment failed",
-			success: false
-		})
-	}
+        await User.findByIdAndUpdate(user_id, { coins: amount }).then(() => {
+            res.json({
+                message: "Payment successful",
+                success: true
+            })
+        })
+
+
+    } catch (error) {
+        console.log("Error", error)
+        res.json({
+            message: "Payment failed",
+            success: false
+        })
+    }
 }
 
+const getMyProblems = async (req, res) => {
+    const user_id = jwtDecoder(req.headers.authorization).id
 
+    let submissions = [];
+    console.log(user_id);
+    Submit.find({ user: user_id }, async (err, result) => {
+        //let applies_info = []
+        console.log(result);
+        
+        for (const submission of result) {
+            await Problem.findOne({ _id: submission.problem }).then(problem => {
+                submissions.push({ name: problem.name, date: submission.date, score: submission.score })
+            }).catch(err => {
+                console.log(err)
+            })
+        }//*/
+        res.send(submissions);
+    })
+}
 
 module.exports = {
-  loginController,
-  registerController,
-  getUserProfileController,
-  updateUserProfileController,
-  getUserRole,
-  getAllUserApplies,
-  uploadProfilePictureController,
-  getUploadedIcon,
-  getUserProfileFromIdController,
-  getUserChats,
-  getUserMessagesFromPerson,
-  getAllProblems,
-  getAllUserSessions,
-  compileProblem,
-  buyCoins
+    loginController,
+    registerController,
+    getUserProfileController,
+    updateUserProfileController,
+    getUserRole,
+    getAllUserApplies,
+    uploadProfilePictureController,
+    getUploadedIcon,
+    getUserProfileFromIdController,
+    getUserChats,
+    getUserMessagesFromPerson,
+    getAllProblems,
+    getAllUserSessions,
+    compileProblem,
+    buyCoins,
+    getMyProblems
 };
