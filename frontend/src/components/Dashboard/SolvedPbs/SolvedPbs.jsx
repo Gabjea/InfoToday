@@ -2,10 +2,10 @@ import React from 'react';
 import SolvedPb from './SolvedPb';
 
 export default function SolvedPbs(props) {
-    const [problems, setProblems] = React.useState([{ name: 'suma', user: 'stana', data: '14/03/2022, 23:36:00', score: '100' }]);
+    const [problems, setProblems] = React.useState([{ name: 'suma', user: 'stana', data: '14/03/2022, 23:36:00', score: '50' }]);
 
     React.useEffect(() => {
-
+        console.log('efngjgfe');
     }, [])
 
     return (
