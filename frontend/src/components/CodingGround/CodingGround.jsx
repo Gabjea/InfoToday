@@ -40,6 +40,8 @@ int main(){
         })//*/
 
         auxSocket?.on('compile', message => {
+            console.log(message);
+            setAnswers(message.ans);
             //setOutput(message);
         })
 
@@ -66,17 +68,19 @@ int main(){
     const handleSubmit = event => {
         event.preventDefault();
         if (socket == null) {
-            axiosAuthInstanceToAPI.post(`/user/problem/compile/${props.pbName}`, {
+            axiosAuthInstanceToAPI.post(`/user/problem/evaluate/${props.pbName}`, {
                 editorCode, input
             }).then(res => {
                 //console.log(res.data);
                 setAnswers(res.data.ans);
+
             }, err => {
                 console.error(err);
                 alert('ERROR!');
             })
+        } else {
+            socket.emit('compile', { editorCode, input, jwt: CookieManager.getCookie('jwt'), problem: props.pbName });
         }
-        socket?.emit('compile', { editorCode, input, jwt: CookieManager.getCookie('jwt') });
     }
 
     return (
@@ -106,7 +110,7 @@ int main(){
             <hr />
             <div>
                 {
-                    answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'}`}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div> )
+                    answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'}`}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div>)
                 }
             </div>
             <button onClick={handleSubmit} id='submit-code'>submit</button>

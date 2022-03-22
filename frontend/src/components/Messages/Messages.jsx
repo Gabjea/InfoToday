@@ -1,11 +1,46 @@
 import React from "react";
+import CookieManager from "../../utils/CookieManager";
 import { axiosAuthInstanceToAPI, getUserDataFromJwtReq } from "../../utils/serverAPI";
 import ChatHead from "./ChatHead/ChatHead";
 import FromMessage from "./ChatHead/MessageBox/FromMessage";
 import MyMessage from "./ChatHead/MessageBox/MyMessage";
-const MAX_CHARS = 3;
+import { baseWsURL } from './../../utils/serverAPI';
+import io from 'socket.io-client';
+const MAX_CHARS = 250;
+const socket = io(baseWsURL);
 
-export default function Messages({ socket }) {
+
+export default function Messages() {
+    const [connected, setConnected] = React.useState();
+
+    React.useEffect(() => {
+
+        socket.on('connected', message => {
+            //console.log(message);
+            setConnected(message);
+        })
+
+        socket.on('connect-user', message => {
+            //console.log(message);
+            const jwt = CookieManager.getCookie('jwt');
+            if (jwt) {
+                //console.log(jwt);
+                console.log(1);
+                socket.emit('connect-user', jwt);
+            }
+        })
+        //console.log('here');
+
+        
+        return () => socket.close();
+    }, [])
+
+    React.useEffect(() => {
+        if (connected) {
+            socket.emit('join-session', '');
+        }
+    }, [connected])
+
     const [chatHeads, setChatHeads] = React.useState([]);
     const [messages, setMessages] = React.useState([]);
     const [myId, setMyId] = React.useState('');
@@ -54,7 +89,7 @@ export default function Messages({ socket }) {
         socket.on('send-message', message => {
             setMessages(preMessages => [...preMessages, message]);
         })
-    }, [socket]);
+    }, []);
 
     const handleSendCLick = event => {
         event.preventDefault();
