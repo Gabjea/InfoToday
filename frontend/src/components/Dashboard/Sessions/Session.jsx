@@ -1,9 +1,10 @@
 import React from 'react';
 
-function Session({ session }) {
+function Session({ session, socket }) {
     const handleClick = event => {
         event.preventDefault();
-        //to be continued
+        const id = session.session._id;
+        window.location.assign(`/session/${id}`);
     }
 
     return (

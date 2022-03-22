@@ -7,7 +7,7 @@ export default function SolvedPbs(props) {
 
     React.useEffect(() => {
         axiosAuthInstanceToAPI.get('/user/problems/mine').then( res => {
-            console.log(res.data);
+            //console.log(res.data);
             setProblems(res.data);
         }, err => {
             console.error(err);
