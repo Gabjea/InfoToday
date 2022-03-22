@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
     faBook, faXmark, faClipboard, faChalkboardTeacher,
-    faLaptopCode, faEllipsis, faCalendarPlus,
+    faLaptopCode, faEllipsis, faCalendarPlus, faCreditCard,
     faUser, faChartLine, faUserCheck, faComment, faArrowRightFromBracket
 } from "@fortawesome/free-solid-svg-icons";
 import CookieManager from "./../../utils/CookieManager";
@@ -26,6 +26,10 @@ export default function Sidebar({ socket }) {
             if (role === 'student') {
                 setMenus(prev => {
                     prev.splice(Menus.length - 1, 0, { title: 'Profesori', src: faChalkboardTeacher, route: '/teachers' });
+                    return prev;
+                })
+                setMenus(prev => {
+                    prev.splice(Menus.length - 1, 0, { title: 'Payment', src: faCreditCard, route: '/pay' });
                     return prev;
                 })
             }
