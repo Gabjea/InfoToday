@@ -43,6 +43,11 @@ app.use("/api/v1", api);
 app.get("/uploads/icons/:img", controller.getUploadedIcon)
 
 
+const { PeerServer } = require('peer');
+
+const peerServer = PeerServer({ port: 3001, path: '/' });
+
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(middlewares.notFound);
 app.use(middlewares.errorHandler);

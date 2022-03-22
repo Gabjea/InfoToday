@@ -18,30 +18,30 @@ const socket_io = (server) => {
     io.on('connection', (socket) => {
         let isName = false;
         socket.emit('connect-user', 're')
-   
-       
+
+
         socket.on('connect-user', async (token) => {
             await functions.getUserByIdFromToken(token).then((user) => {
                 socket.user = user
                 isName = true
-            }).catch((err) =>{
+            }).catch((err) => {
                 console.log(err);
             })
-            sockets.push({ socket_id: socket.id, user_id: socket.user._id.toString(), name:socket.user.name + ' ' +socket.user.surname })
-            
-            
+            sockets.push({ socket_id: socket.id, user_id: socket.user._id.toString(), name: socket.user.name + ' ' + socket.user.surname })
+
+
             socket.emit('connected', true)
         })
 
 
         socket.on("disconnect", (reason) => {
-            
-        
+            socket.broadcast.to(socket.room).emit('user-disconnected', socket.id)
+
             const delSocketIndex = sockets.findIndex((discSocket) => discSocket.socket_id === socket.id)
-            
-            
+
+
             sockets.splice(delSocketIndex, 1)
-          
+
         });
 
         socket.on('edit-code', data => {
@@ -53,10 +53,10 @@ const socket_io = (server) => {
         })
 
         socket.on('send-message', async data => {
-            {
+            
                 const sendToIndex = sockets.findIndex((sendTo) => sendTo.user_id === data.otherId)
                 const senderIndex = sockets.findIndex((sender) => sender.socket_id === socket.id)
-
+               
                 if (sockets[sendToIndex]) {
 
                     socket.to(sockets[sendToIndex].socket_id).emit('send-message',
@@ -86,32 +86,29 @@ const socket_io = (server) => {
                 });
 
 
-
-            }
+            
         })
 
 
 
-        socket.on('compile', data => {
-
-            var post = JSON.stringify({
-                "code": data.editorCode,
-                "language": "cpp",
-                "input": data.input !== null ? data.input : ''
-            });
+        socket.on('compile', payload => {
 
             var config = {
                 method: 'post',
-                url: 'https://codexweb.netlify.app/.netlify/functions/enforceCode',
+                url: `${process.env.HOST}/api/v1/user/problem/evaluate/${payload.problem}`,
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'Authorization': payload.jwt
                 },
-                data: post
+                data: {
+                    editorCode: payload.editorCode,
+                    input: payload.input
+                }
             };
 
             axios(config)
                 .then(function (response) {
-                    io.sockets.in(socket.room).emit('compile', response.data.output)
+                    io.sockets.in(socket.room).emit('compile', response.data)
                 })
                 .catch(function (error) {
                     console.log(error);
@@ -142,8 +139,8 @@ const socket_io = (server) => {
         socket.on('join-room', (room) => {
             socket.join(room)
             socket.room = room
-            socket.broadcast.to(room).emit('session-user-connected',socket.user.name + ' ' + socket.user.surname)
-            
+            socket.broadcast.to(room).emit('session-user-connected', socket.id)
+
         })
 
 
