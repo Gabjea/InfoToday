@@ -22,7 +22,7 @@ router.patch("/profile",middlewares.Auth,controller.updateUserProfileController)
 router.get('/chats',  middlewares.Auth, controller.getUserChats )
 router.get('/chat/:id', middlewares.Auth, controller.getUserMessagesFromPerson)
 
-router.post('/problem/compile/:nume', middlewares.Auth, controller.compileProblem )
+router.post('/problem/evaluate/:nume', middlewares.Auth, controller.compileProblem )
 
 router.get('/problems', middlewares.Auth, controller.getAllProblems)
 router.get('/problems/mine', middlewares.Auth, controller.getMyProblems)
