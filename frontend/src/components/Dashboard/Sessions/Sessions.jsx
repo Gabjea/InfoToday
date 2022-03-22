@@ -1,6 +1,5 @@
 import React from 'react';
 import { axiosAuthInstanceToAPI } from '../../../utils/serverAPI';
-import Problems from '../../Problems/Problems';
 import Session from './Session';
 
 function Sessions({ socket }) {
