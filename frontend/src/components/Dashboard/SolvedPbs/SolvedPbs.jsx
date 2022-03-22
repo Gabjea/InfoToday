@@ -21,7 +21,7 @@ export default function SolvedPbs(props) {
             <div id='name-cols' className='text-2xl'>
                 <span>nume</span>
                 <span className='ml-28'>data</span>
-                <span className='ml-40'>scor</span>
+                <span className='ml-80'>scor</span>
             </div>
 
             {

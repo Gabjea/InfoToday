@@ -1,14 +1,27 @@
 import React from 'react';
-import { axiosAuthInstanceToAPI } from '../../utils/serverAPI';
+import { axiosAuthInstanceToAPI, getUserDataFromJwtReq } from '../../utils/serverAPI';
 import Teacher from './Teacher';
 
-export default function Teachers(props) {
-    const [teachers, setTeachers] = React.useState([]);
+export default function Teachers() {
 
+    React.useEffect(() => {
+        getUserDataFromJwtReq().then(({ role }) => {
+            if (role === 'teacher') {
+                window.location.assign('/');
+                return;
+            }
+        }, err => {
+            console.error(err);
+        })
+    }, [])
+
+    const [teachers, setTeachers] = React.useState([]);
     React.useEffect(() => {
         axiosAuthInstanceToAPI.get('/teacher/all').then(res => {
             //console.log(res.data);
             setTeachers(res.data);
+        }, err => {
+            console.error(err);
         })
     }, [])
 

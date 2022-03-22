@@ -77,13 +77,15 @@ export default function App() {
                         {<Route path="/upload-pb" element={isAuth ? <UploadPb socket={socket} /> : <Navigate replace to="/login" />} />}
                         {<Route path="/probleme" element={isAuth ? <Problems socket={null} /> : <Navigate replace to="/login" />} />}
                         {<Route path="/create-session" element={isAuth ? <CreateSession socket={socket} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/pay" element={isAuth ? <AddMoney socket={null} /> : <Navigate replace to="/login" />} />}
+
                         {/* !auth */}
                         <Route path="/register" element={<Register />} />
                         <Route path="/login" element={<Login />} />
                         <Route path="/signout" element={<Signout />} />
 
+
                         <Route path="/rtc" element={<RtcStream socket={socket} />} />
-                        {<Route path="/stripe" element={<AddMoney />} />}
 
 
                         <Route path="*" element={<Pg404 />} />

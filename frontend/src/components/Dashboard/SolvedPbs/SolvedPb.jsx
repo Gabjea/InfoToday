@@ -29,8 +29,8 @@ function SolvedPb({ problem }) {
         <div>
             <div ref={pbBoxRef} className={`${color} w-full lg:flex-row rounded overflow-hidden h-auto border border-gray-300 shadow shadow-lg `}>
                 <span>{problem.name}</span>
-                <span className='ml-28'>{''}{formatDate(problem.date)}</span>
-                <span className='ml-10'>{problem.score}</span>
+                <span className='ml-32'>{''}{formatDate(problem.date)}</span>
+                <span className='ml-48'>{' '}{problem.score}</span>
             </div>
         </div>
     );

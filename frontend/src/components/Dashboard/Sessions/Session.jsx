@@ -3,6 +3,7 @@ import React from 'react';
 function Session({ session }) {
     const handleClick = event => {
         event.preventDefault();
+        //to be continued
     }
 
     return (
