@@ -1,8 +1,9 @@
 import React from 'react';
 import { axiosAuthInstanceToAPI } from '../../../utils/serverAPI';
+import Problems from '../../Problems/Problems';
 import Session from './Session';
 
-function Sessions(props) {
+function Sessions({ socket }) {
     const [sessions, setSessions] = React.useState([]);
 
     React.useEffect(() => {
@@ -13,12 +14,12 @@ function Sessions(props) {
             alert("ERROR!");
         })
     }, [])
+
     return (
         <div>
             <p>Sesiuni viitoare:</p>
-
             {
-                sessions.map(session => <Session key={Math.random()} session={session} />)
+                sessions.map(session => <Session socket={socket} key={Math.random()} session={session} />)
             }
         </div>
     );
