@@ -36,7 +36,7 @@ const socket_io = (server) => {
 
         socket.on("disconnect", (reason) => {
             socket.broadcast.to(socket.room).emit('user-disconnected', socket.id)
-
+            socket.broadcast.to(socket.room).emit("callEnded")
             const delSocketIndex = sockets.findIndex((discSocket) => discSocket.socket_id === socket.id)
 
 
@@ -53,40 +53,40 @@ const socket_io = (server) => {
         })
 
         socket.on('send-message', async data => {
-            
-                const sendToIndex = sockets.findIndex((sendTo) => sendTo.user_id === data.otherId)
-                const senderIndex = sockets.findIndex((sender) => sender.socket_id === socket.id)
-               
-                if (sockets[sendToIndex]) {
 
-                    socket.to(sockets[sendToIndex].socket_id).emit('send-message',
-                        {
-                            sender: sockets[senderIndex].user_id,
-                            receiver: sockets[sendToIndex].user_id,
-                            message: data.message
-                        })
-                }
+            const sendToIndex = sockets.findIndex((sendTo) => sendTo.user_id === data.otherId)
+            const senderIndex = sockets.findIndex((sender) => sender.socket_id === socket.id)
 
-                io.to(sockets[senderIndex].socket_id).emit('send-message',
+            if (sockets[sendToIndex]) {
+
+                socket.to(sockets[sendToIndex].socket_id).emit('send-message',
                     {
                         sender: sockets[senderIndex].user_id,
-                        receiver: data.otherId,
+                        receiver: sockets[sendToIndex].user_id,
                         message: data.message
                     })
+            }
 
-                const newMessage = new Message({
-                    _id: new mongoose.Types.ObjectId(),
+            io.to(sockets[senderIndex].socket_id).emit('send-message',
+                {
                     sender: sockets[senderIndex].user_id,
                     receiver: data.otherId,
                     message: data.message
-                });
-                const savedMessage = await newMessage.save().catch((err) => {
-                    console.log("Error: ", err);
+                })
 
-                });
+            const newMessage = new Message({
+                _id: new mongoose.Types.ObjectId(),
+                sender: sockets[senderIndex].user_id,
+                receiver: data.otherId,
+                message: data.message
+            });
+            const savedMessage = await newMessage.save().catch((err) => {
+                console.log("Error: ", err);
+
+            });
 
 
-            
+
         })
 
 
@@ -135,15 +135,26 @@ const socket_io = (server) => {
             }
         })
 
-
-        socket.on('join-room', (room) => {
+        socket.emit("me", socket.id)
+        socket.on('join-room', async(room) => {
             socket.join(room)
             socket.room = room
-            socket.to(room).emit('session-user-connected', socket.id)
-            console.log('join-room ' + room);
+            const sockets = await io.in(room).fetchSockets();
+            
+            if(sockets.length > 1 ){
+                console.log(sockets[0].id, socket.id);
+                io.to(sockets[0].id).emit('all-connected', socket.id)
+            }
         })
 
 
+        socket.on("callUser", (data) => {
+            io.to(data.userToCall).emit("callUser", { signal: data.signalData, from: data.from, name: data.name })
+        })
+    
+        socket.on("answerCall", (data) => {
+            io.to(data.to).emit("callAccepted", data.signal)
+        })
 
 
     })
