@@ -3,7 +3,7 @@ import CookieManager from "./CookieManager";
 
 //school: 192.168.0.132:5000
 //ganju's: 79.113.205.105:5000
-export const host = 'localhost';
+export const host = '79.113.205.105';
 export const hostWithPort = `${host}:5000`;
 export const baseHttpURL = `http://${hostWithPort}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
