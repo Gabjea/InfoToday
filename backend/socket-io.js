@@ -139,8 +139,8 @@ const socket_io = (server) => {
         socket.on('join-room', (room) => {
             socket.join(room)
             socket.room = room
-            socket.broadcast.to(room).emit('session-user-connected', socket.id)
-
+            socket.to(room).emit('session-user-connected', socket.id)
+            console.log('join-room ' + room);
         })
 
 

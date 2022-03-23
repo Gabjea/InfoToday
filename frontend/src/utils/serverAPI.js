@@ -3,10 +3,11 @@ import CookieManager from "./CookieManager";
 
 //school: 192.168.0.132:5000
 //ganju's: 79.113.205.105:5000
-export const host = '79.113.205.105:5000';
-export const baseHttpURL = `http://${host}`;
+export const host = 'localhost';
+export const hostWithPort = `${host}:5000`;
+export const baseHttpURL = `http://${hostWithPort}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
-export const baseWsURL = `ws://${host}`;
+export const baseWsURL = `ws://${hostWithPort}`;
 const timeout = 30000e3;
 
 export const axiosInstanceToAPI = axios.create({
