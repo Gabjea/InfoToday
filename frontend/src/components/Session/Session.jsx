@@ -1,25 +1,23 @@
 import React from 'react';
 import { useParams } from "react-router-dom";
 import CookieManager from '../../utils/CookieManager';
-import { baseWsURL } from './../../utils/serverAPI';
+import { baseWsURL, host } from './../../utils/serverAPI';
 import io from 'socket.io-client';
 import Problems from '../Problems/Problems';
+import Peer from 'peerjs';
+import './Session.css'
+import { faL } from '@fortawesome/free-solid-svg-icons';
+//myVideo.muted = true
 const socket = io(baseWsURL);
-
 
 export default function Session() {
     const { id: sessionId } = useParams();
     const [connected, setConnected] = React.useState();
 
     React.useEffect(() => {
-        socket.on('session-user-connected', message => {
-            console.log(message);
-        })
 
         socket.on('connected', message => {
-            //console.log(message);
             setConnected(message);
-            socket.emit('join-room', sessionId);
         })
 
         socket.on('connect-user', message => {
@@ -40,10 +38,14 @@ export default function Session() {
         }
     }, [connected])
 
+    //------------------------------------------------------------
+
     return (
         <div>
             Session #{sessionId}
-            <Problems socket={socket} />
+
+            <hr />
+            <Problems socket={socket} sessionId={sessionId} />
         </div>
     );
 }
