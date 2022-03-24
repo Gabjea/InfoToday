@@ -4,7 +4,7 @@ import 'codemirror/lib/codemirror.css'
 import 'codemirror/theme/dracula.css'
 import 'codemirror/mode/clike/clike'
 import 'codemirror/keymap/sublime'
-const EDITOR_HEIGHT = 300;
+const EDITOR_HEIGHT = 600;
 
 function TextArea({ socket, startVal, setEditorVal, mode, editorType }) {
     const [runned, setRunned] = React.useState(false);
@@ -12,7 +12,7 @@ function TextArea({ socket, startVal, setEditorVal, mode, editorType }) {
 
     React.useEffect(() => {
         window.addEventListener(`resize`, () => {
-            editor.current?.setSize(window.innerWidth / 3, EDITOR_HEIGHT);
+            editor.current?.setSize(window.innerWidth / 2, EDITOR_HEIGHT);
         })
     }, [editor])
 

@@ -13,7 +13,7 @@ export default function AddMoney(props) {
     }, [])
 
     return (
-        <div className='App'>
+        <div className='App h-screen flex items-center'>
             <StripeContainer />
         </div>
     );

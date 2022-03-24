@@ -69,7 +69,7 @@ export default function Sidebar({ socket }) {
                         }`}
                 />
                 <h1
-                    className={`text-white origin-left font-medium text-xl duration-200 ${!open && "scale-0"
+                    className={`text-white origin-left font-medium text-2xl duration-200 ${!open && "scale-0"
                         }`}
                 >
                     InfoToday
@@ -79,7 +79,7 @@ export default function Sidebar({ socket }) {
                 {Menus.map((Menu, index) => (
                     <li onClick={() => window.location.assign(Menu.route)}
                         key={index}
-                        className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-300 text-sm items-center gap-x-3 
+                        className={`flex rounded-md p-2 cursor-pointer hover:bg-light-white text-gray-200 text-sm items-center gap-x-3 
               ${Menu.gap ? "mt-10" : "mt-2"} ${Menu.route === window.location.pathname && "bg-light-white"
                             } `}
                     >
