@@ -21,6 +21,8 @@ router.patch("/profile",middlewares.Auth,controller.updateUserProfileController)
 
 router.get('/chats',  middlewares.Auth, controller.getUserChats )
 router.get('/chat/:id', middlewares.Auth, controller.getUserMessagesFromPerson)
+router.post('/chat/conversation/:id', middlewares.Auth, controller.createConversation)
+
 
 router.post('/problem/evaluate/:nume', middlewares.Auth, controller.compileProblem )
 
