@@ -108,7 +108,7 @@ int main(){
                 <small style={{ 'overflow': 'hidden' }}> {name} </small>
             </div>
 
-            <hr />
+            
             <div>
                 {
                     answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'}`}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div>)
