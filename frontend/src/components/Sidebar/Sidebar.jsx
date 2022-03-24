@@ -33,6 +33,7 @@ export default function Sidebar({ socket }) {
                     return prev;
                 })
             }
+            setOpen(true);
         });
     }, [Menus])
 

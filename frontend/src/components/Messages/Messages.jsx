@@ -11,13 +11,11 @@ const socket = io(baseWsURL);
 
 
 export default function Messages() {
-    const [connected, setConnected] = React.useState();
 
     React.useEffect(() => {
 
         socket.on('connected', message => {
             //console.log(message);
-            setConnected(message);
         })
 
         socket.on('connect-user', message => {
@@ -35,12 +33,6 @@ export default function Messages() {
         return () => socket.close();
     }, [])
 
-    React.useEffect(() => {
-        if (connected) {
-            socket.emit('join-session', '');
-        }
-    }, [connected])
-
     const [chatHeads, setChatHeads] = React.useState([]);
     const [messages, setMessages] = React.useState([]);
     const [myId, setMyId] = React.useState('');
@@ -48,7 +40,9 @@ export default function Messages() {
     const txtInputRef = React.createRef();
     const [userChatData, setUserChatData] = React.useState();
 
-    const openChat = React.useCallback(id => {
+    const openChat = React.useCallback(async id => {
+        socket.emit('join-room', chatHeads[id].room);
+
         axiosAuthInstanceToAPI.get(`/user/chat/${chatHeads[id].id}`).then(res => {
             setMessages(res.data);
             setUserChatData({
@@ -79,14 +73,14 @@ export default function Messages() {
     }
 
     React.useEffect(() => {
-        axiosAuthInstanceToAPI.get('/user/chats').then(res => {
-            //console.log(res.data);
+        axiosAuthInstanceToAPI.get('/user/chats').then(res => {            
             setChatHeads(res.data);
         }, err => {
             console.error(err);
         })//*/
 
         socket.on('send-message', message => {
+            console.log(message);
             setMessages(preMessages => [...preMessages, message]);
         })
     }, []);

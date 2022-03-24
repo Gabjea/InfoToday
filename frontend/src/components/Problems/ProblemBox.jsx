@@ -1,9 +1,17 @@
 import React from 'react';
 
-export default function ProblemBox({ problem, setDisplayed }) {
+export default function ProblemBox({ problem, setDisplayed, socket }) {
+
+    React.useEffect(() => {
+        socket?.on('display-problem', pbName => {
+            setDisplayed(pbName);
+        })
+    }, [socket, setDisplayed])
+
     const handleClick = event => {
         event.preventDefault();
         setDisplayed(problem.name);
+        socket?.emit('display-problem', problem.name);
     }
 
     return (

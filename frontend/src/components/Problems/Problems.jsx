@@ -1,6 +1,5 @@
 import React from 'react';
 import { axiosAuthInstanceToAPI } from '../../utils/serverAPI';
-import RtcStream from '../RtcStream/RtcStream';
 import Problem from './Problem';
 import ProblemBox from './ProblemBox';
 import { CATEGORIES } from './../../utils/constants';
@@ -49,11 +48,20 @@ export default function Problems({ socket }) {
         setSelInp(category);
     }
 
+    React.useEffect(() => {
+        socket?.on('back', () => {
+            setDisplayed('');
+            setSrcInp('');
+            setSelInp('*');
+        })
+    }, [socket])
+
     const handleBackClick = event => {
         event.preventDefault();
         setDisplayed('');
         setSrcInp('');
         setSelInp('*');
+        socket?.emit('back');
     }
 
     return (
@@ -85,7 +93,7 @@ export default function Problems({ socket }) {
                     </select>
                     <br />
                     {
-                        problems.map(problem => <div key={Math.random()} className='flex justify-center mb-5'><ProblemBox setDisplayed={setDisplayed} problem={problem} /> </div>)
+                        problems.map(problem => <div key={Math.random()} className='flex justify-center mb-5'><ProblemBox socket={socket} setDisplayed={setDisplayed} problem={problem} /> </div>)
                     }
                 </div>
             }
