@@ -11,9 +11,9 @@ function Problem({ problem, socket }) {
                 <div className=''>
                 <p className='text-3xl'>{problem.name}</p>
                 <i>{'nume creator'}</i>
-                <hr />
+                
                 {problem.text}
-                <hr />
+                
                 <p>Exemplu:</p>
                 Input:
                 <br />

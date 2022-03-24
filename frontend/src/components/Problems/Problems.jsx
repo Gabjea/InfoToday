@@ -66,14 +66,14 @@ export default function Problems({ socket }) {
 
     return (
         <div>
-            <hr />
-            <hr />
+            
+            
             {displayedPb && <button onClick={handleBackClick}
                 className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded"
             >
                 back
             </button>}
-            <hr />
+            
             <br />
             {(displayedPb && <Problem
                 socket={socket}

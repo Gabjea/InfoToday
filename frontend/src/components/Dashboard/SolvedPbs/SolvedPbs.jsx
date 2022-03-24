@@ -20,13 +20,18 @@ export default function SolvedPbs(props) {
                 Probleme rezolvate
             </p>
             <div class="bg-white overflow-auto">
-                <table class="min-w-full bg-white">
-                    <thead class="bg-purple-600 text-white">
+                <table class="min-w-full bg-white border-collapse border border-slate-500">
+                    <thead class="bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white 	">
                         <tr>
-                            <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Nume</th>
-                            <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm">Punctaj</th>
-                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm"></th>
-                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm">Data</th>
+                            <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm border border-slate-500 text-center	">
+                                Nume
+                            </th>
+                            <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm border border-slate-500 text-center	">
+                                Punctaj
+                            </th>
+                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm border border-slate-500 text-center	">
+                                Data
+                            </th>
                         </tr>
                     </thead>
                     <tbody class="text-gray-700">
