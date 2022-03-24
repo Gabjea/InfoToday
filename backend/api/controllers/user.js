@@ -3,6 +3,7 @@ const Apply = require('../../models/apply')
 const Message = require('../../models/message')
 const Problem = require('../../models/problem')
 const Submit = require('../../models/submit')
+const Conversation = require('../../models/conversation')
 const mongoose = require("../../database");
 const bcrypt = require("bcrypt");
 const fs = require('fs')
@@ -146,7 +147,7 @@ const uploadProfilePictureController = async (req, res) => {
             });
         else {
             await functions.updateUserProfile(token, { profile_pic: process.env.HOST + path })
-            console.log('caca');
+       
             res.status(200).json({ message: "Ti-ai actualizat poza de profil cu succes!" })
         }
 
@@ -173,26 +174,27 @@ const getUserProfileFromIdController = async (req, res) => {
 
 const getUserChats = async (req, res) => {
     const user_id = jwtDecoder(req.headers.authorization).id
+    let convesations = []
 
+    await Conversation.find({ $or: [{ user1: user_id }, {user2:user_id }] }, async(err ,result) =>{
+        if (err) res.send(err)
+        let chattingWith = {}
+        for(const conf of result){
+            if(user_id !== conf.user1){
+                chattingWith = await User.findById(conf.user1)
+            }
+            else {
+                chattingWith = await User.findById(conf.user2)
+            }
+            
+            convesations.push({ room: conf._id, id: chattingWith._id, name: chattingWith.name + " " + chattingWith.surname, pic: chattingWith.profile_pic })
 
-    await Message.find({ receiver: user_id }).distinct('sender', async (err, result) => {
-
-        let sender_info = []
-        for (const id of result) {
-            await User.findOne({ _id: id }).then(sender => {
-                sender_info.push({ id: sender._id, name: sender.name + " " + sender.surname, pic: sender.profile_pic })
-            }).catch(err => {
-                console.log(err)
-            })
         }
-
-
-        res.send(sender_info)
-
-
-
+        res.send(convesations)
+        
     }).clone()
 
+   
 }
 
 const getUserMessagesFromPerson = async (req, res) => {
@@ -201,7 +203,6 @@ const getUserMessagesFromPerson = async (req, res) => {
 
     await Message.find({ $or: [{ sender: user_id, receiver: chattingWith }, { sender: chattingWith, receiver: user_id }] }, (err, result) => {
         if (err) res.send(err)
-
 
         res.send(result)
     }).clone()
@@ -215,7 +216,7 @@ const getAllProblems = async (req, res) => {
 
     }).clone()
 
-    console.log(problems)
+  
 
     res.send(problems)
 
@@ -241,7 +242,7 @@ const getAllUserSessions = async (req, res) => {
     }
 
 
-    console.log(sessions_info)
+
     res.send(sessions_info)
 
 }
@@ -269,7 +270,7 @@ const compileProblem = async (req, res) => {
 
             tests.push(stdout?.trim() === problema.tests[index].output.trim() ? 100 / problema.tests.length : 0)
 
-            //console.log(stdout,problema.tests[index].input, problema.tests[index].output);
+     
 
         }
         console.log(tests);
@@ -361,10 +362,10 @@ const getMyProblems = async (req, res) => {
     const user_id = jwtDecoder(req.headers.authorization).id
 
     let submissions = [];
-    console.log(user_id);
+
     Submit.find({ user: user_id }, async (err, result) => {
         //let applies_info = []
-        console.log(result);
+      
         
         for (const submission of result) {
             await Problem.findOne({ _id: submission.problem }).then(problem => {
@@ -376,6 +377,35 @@ const getMyProblems = async (req, res) => {
         res.send(submissions);
     })
 }
+
+const createConversation = async(req, res ) => {
+    const user_id = jwtDecoder(req.headers.authorization).id
+    const teacher_id = req.params.id
+    console.log(user_id,teacher_id);
+    const alreadyExistsConversation = await Conversation.findOne({ $or: [{ user1: user_id, user2:teacher_id }, { user1: teacher_id, user2:user_id }] })
+
+    
+    if(alreadyExistsConversation)
+        return res.send('Exista deja o conversatie.')
+
+
+    const newConversation = new Conversation({
+        _id: new mongoose.Types.ObjectId(),
+        user1: user_id,
+        user2: teacher_id
+    });
+    const savedConversation = await newConversation.save().catch((err) => {
+        console.log("Error: ", err);
+        res.status(500).json({ error: "Evaluarea a esuat!" });
+    });
+
+    if (savedConversation) {
+
+        res.send("Conversatia a fost creata cu succes.")
+    }
+}
+
+
 
 module.exports = {
     loginController,
@@ -393,5 +423,6 @@ module.exports = {
     getAllUserSessions,
     compileProblem,
     buyCoins,
-    getMyProblems
+    getMyProblems,
+    createConversation
 };

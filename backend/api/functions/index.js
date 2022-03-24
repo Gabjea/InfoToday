@@ -37,7 +37,7 @@ const updateUserProfile = async(token,body) =>{
     try {
         const id = jwtDecoder(token).id
         const {name,surname,profile_pic,email,password,desc} = body
-        console.log(profile_pic);
+       
         const passwordSalt = 10;
         bcrypt.hash(password, passwordSalt, async function (err, hashedPassword) {
             
