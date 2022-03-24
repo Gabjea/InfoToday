@@ -76,31 +76,28 @@ export default function PaymentForm() {
     }, [success])
 
     return (
-        <>
+        <div className="w-full">
 
             {
                 <form onSubmit={handleSubmit}>
-                    <div className="">
+                    <div >
                         <input
-                        style={{'margin': '0px 15px 20px', 'padding': '11px 15px 11px 0px', 
-                        'box-sizing': 'border-box'                    
-                    }}
-                        onChange={e => setAmountToAdd(Number(e.target.value))} type="text" placeholder="cantitate"
-                            className=" w-11/12
+                        onChange={e => setAmountToAdd(Number(e.target.value))} type="text" placeholder="lei"
+                            className=" w-full mb-2
                         appearance-none block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
                         />
-                        <br />
+                     
                     </div>
                     <fieldset className="FormGroup">
                         <div className="FormRow">
                             <CardElement options={CARD_OPTIONS} />
                         </div>
                     </fieldset>
-                    <button className="stripe">Pay</button>
+                    <button className="stripe w-full">Pay</button>
                 </form>
 
             }
 
-        </>
+        </div>
     )
 }

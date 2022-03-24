@@ -33,7 +33,7 @@ export default function App() {
         <Router>
             <div className="md:flex ">
                 <Sidebar  />
-                <div className="w-screen ">
+                <div className="w-screen">
 
                     <Routes>
                         {<Route index element={!isAuth ? <Home /> : <Navigate replace to="dashboard" />} />}

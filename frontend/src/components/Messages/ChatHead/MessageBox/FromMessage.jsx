@@ -7,7 +7,7 @@ function FromMessage({ message, pic }) {
                 <div
                     className="flex items-center justify-center h-10 w-10 rounded-full bg-indigo-500 flex-shrink-0"
                 >
-                    <img src={pic} className='rounded-full' alt="" />
+                    <img src={pic} className='rounded-full w-20 h-10' alt="" />
                 </div>
                 <div
                     className="relative ml-3 text-sm bg-white py-2 px-4 shadow rounded-xl"

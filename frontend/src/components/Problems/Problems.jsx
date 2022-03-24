@@ -65,11 +65,11 @@ export default function Problems({ socket }) {
     }
 
     return (
-        <div>
+        <div className='px-6'>
             
             
             {displayedPb && <button onClick={handleBackClick}
-                className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded"
+                className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded mt-20"
             >
                 back
             </button>}
@@ -81,10 +81,10 @@ export default function Problems({ socket }) {
             />)
                 ||
                 <div className='px-6 py-10 '>
-                    <p>Probleme:</p>
+                    <p className='text-xl'>Probleme:</p>
                     <input type="text" placeholder='search by name'
-                        className='appearance-none block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500' onChange={handleInputChange} /> <br />
-                    Categorie:
+                        className='appearance-none  block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500' onChange={handleInputChange} /> <br />
+                    <p className='text-xl'>Categorie:</p>
                     <select className=' block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md  px-4 leading-tight focus:outline-none  focus:border-gray-500' name="category" id="category" onChange={handleSelChange}>
                         {
 

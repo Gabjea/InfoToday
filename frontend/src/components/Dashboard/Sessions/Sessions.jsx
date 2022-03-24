@@ -15,12 +15,12 @@ function Sessions() {
     }, [])
 
     return (
-        <div class="flex flex-wrap mt-6">
-            <div class="w-full lg:w-1/2 pr-0 lg:pr-2">
-                <p class="text-xl pb-3 flex items-center">
+        <div className="flex flex-wrap mt-6">
+            <div className="w-full lg:w-1/2 pr-0 lg:pr-2">
+                <p className="text-2xl pb-3 flex items-center">
                     Sesiuni viitoare:
                 </p>
-                <div class="w-full p-1 bg-white">
+                <div className="w-full p-1 bg-white">
                     {
                         sessions.map(session => <Session key={Math.random()} session={session} />)
 

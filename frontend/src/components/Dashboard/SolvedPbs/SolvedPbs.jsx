@@ -15,26 +15,26 @@ export default function SolvedPbs(props) {
     }, [])
 
     return (
-        <div class="w-full mt-12">
-            <p class="text-xl pb-3 flex items-center">
-                Probleme rezolvate
+        <div className="w-full mt-12">
+            <p className="text-2xl pb-3 flex items-center">
+                Probleme rezolvate:
             </p>
-            <div class="bg-white overflow-auto">
-                <table class="min-w-full bg-white border-collapse border border-slate-500">
-                    <thead class="bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 text-white 	">
+            <div className="bg-white overflow-auto shadow shadow-lg">
+                <table className="min-w-full bg-white ">
+                    <thead className="bg-gradient-to-r from-purple-600 via-purple-500 to-purple-600 text-white 	">
                         <tr>
-                            <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm border border-slate-500 text-center	">
+                            <th className="w-1/3 text-left py-3 px-4 uppercase font-semibold  text-center  border-l border-slate-500	">
                                 Nume
                             </th>
-                            <th class="w-1/3 text-left py-3 px-4 uppercase font-semibold text-sm border border-slate-500 text-center	">
+                            <th className="w-1/3 text-left py-3 px-4 uppercase font-semibold   text-center	">
                                 Punctaj
                             </th>
-                            <th class="text-left py-3 px-4 uppercase font-semibold text-sm border border-slate-500 text-center	">
+                            <th className="text-left py-3 px-4 uppercase font-semibold  border-r border-slate-500 text-center	">
                                 Data
                             </th>
                         </tr>
                     </thead>
-                    <tbody class="text-gray-700">
+                    <tbody className="text-gray-700">
 
                         {
                             problems.map(problem => <SolvedPb key={Math.random()} problem={problem} />)

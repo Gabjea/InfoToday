@@ -86,6 +86,8 @@ int main(){
 
     return (
         <div style={{ 'overflow': 'hidden' }}>
+            <div className=''>
+
             <MemoizedTextArea
                 socket={props.socket}
                 startVal={startingCode}
@@ -93,16 +95,9 @@ int main(){
                 mode={'text/x-c++src'}
                 editorType={'code'}
             />
-            <br />
-            <br />
-            <br />
-            <MemoizedTextArea
-                socket={props.socket}
-                startVal={''}
-                setEditorVal={setInput}
-                mode={'text'}
-                editorType={'input'}
-            />
+            </div>
+            
+            
             <div ref={refToMov} id="movable" style={{ 'overflow': 'hidden', 'color': 'blue', 'position': 'absolute', 'left': 0, 'top': 0, 'userSelect': 'none' }}>
                 <FontAwesomeIcon icon={faArrowPointer} />
                 <small style={{ 'overflow': 'hidden' }}> {name} </small>
@@ -114,7 +109,7 @@ int main(){
                     answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'}`}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div>)
                 }
             </div>
-            <button onClick={handleSubmit} id='submit-code'>submit</button>
+            <button className='bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded ' onClick={handleSubmit} id='submit-code'>Evalueaza</button>
         </div>
     );
 }

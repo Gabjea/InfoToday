@@ -26,14 +26,14 @@ function SolvedPb({ problem }) {
     }, [pbBoxRef, problem.score])//*/
 
     return (
-        <tr className={`rounded bg-gray-200 `}>
-            <td className="w-1/3 text-left py-3 px-4 border border-slate-500 text-center	">
+        <tr className={`rounded bg-white `}>
+            <td className="w-1/3  py-3 border border-slate-500 text-2xl text-center	">
                 {problem.name}
             </td>
-            <td className={`w-1/3 text-left py-3 px-4 border border-slate-500 ${color} text-center	`}>
+            <td className={`w-1/3 py-3 border border-slate-500 ${color} text-center	 text-2xl `}>
                 {problem.score}
             </td>
-            <td className="text-left py-3 px-4 border border-slate-500 text-center	">
+            <td className="py-3 border border-slate-500 text-center text-xl	">
                 {formatDate(problem.date)}
             </td>
         </tr>
