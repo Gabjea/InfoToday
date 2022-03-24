@@ -67,14 +67,14 @@ export default function Messages() {
 
     const handleClick = event => {
         event.preventDefault();
-        //console.log(event.target.id);
+        console.log('pressed on: ' + event.target.id);
         const { id } = event.target;
         openChat(id);
     }
 
     React.useEffect(() => {
         axiosAuthInstanceToAPI.get('/user/chats').then(res => {            
-            setChatHeads(res.data);
+            setChatHeads(res.data.reverse());
         }, err => {
             console.error(err);
         })//*/
@@ -101,7 +101,7 @@ export default function Messages() {
 
     React.useEffect(() => {
         if (chatHeads?.length) {
-            openChat(chatHeads.length - 1);
+            openChat(0);
         }
     }, [chatHeads, openChat]);
 
@@ -125,6 +125,7 @@ export default function Messages() {
         }
     }
 
+    let id = 0;
     return (
         <div className="flex h-screen antialiased text-gray-800" >
             <div className="flex flex-row h-full w-full overflow-x-hidden" >
@@ -185,7 +186,6 @@ export default function Messages() {
                             <ul>
                                 {
                                     chatHeads.map(chatHead => {
-                                        let id = 0;
                                         return <li key={chatHead.id}> <ChatHead handleClick={handleClick} id={id++} name={chatHead.name} pic={chatHead.pic} /> </li>
                                     })
                                 }

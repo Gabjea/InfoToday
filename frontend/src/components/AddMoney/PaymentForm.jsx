@@ -81,8 +81,12 @@ export default function PaymentForm() {
             {
                 <form onSubmit={handleSubmit}>
                     <div className="">
-                        <input onChange={e => setAmountToAdd(Number(e.target.value))} type="text" placeholder="cantitate"
-                            className=" 
+                        <input
+                        style={{'margin': '0px 15px 20px', 'padding': '11px 15px 11px 0px', 
+                        'box-sizing': 'border-box'                    
+                    }}
+                        onChange={e => setAmountToAdd(Number(e.target.value))} type="text" placeholder="cantitate"
+                            className=" w-11/12
                         appearance-none block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
                         />
                         <br />

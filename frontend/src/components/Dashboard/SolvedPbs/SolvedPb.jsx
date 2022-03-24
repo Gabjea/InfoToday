@@ -1,17 +1,17 @@
 import React from 'react';
-import { formatDate } from '../../../utils/DateTime';
+import { formatDate } from './../../../utils/DateTime';
 
 function SolvedPb({ problem }) {
-    const pbBoxRef = React.createRef();
+
     const [color] = React.useState(() => {
-        const score= Number(problem.score);
-        console.log(typeof score);
+        const score = Number(problem.score);
+        //console.log(typeof score);
         if (score === 0) {
-            return 'bg-red-600';
+            return 'text-red-600';
         } else if (score < 100) {
-            return 'bg-yellow-400';
+            return 'text-yellow-600';
         } else {
-            return 'bg-green-600';
+            return 'text-green-600';
         }
     });
 
@@ -26,13 +26,18 @@ function SolvedPb({ problem }) {
     }, [pbBoxRef, problem.score])//*/
 
     return (
-        <div>
-            <div ref={pbBoxRef} className={`${color} w-full lg:flex-row rounded overflow-hidden h-auto border border-gray-300 shadow shadow-lg `}>
-                <span>{problem.name}</span>
-                <span className='ml-32'>{''}{formatDate(problem.date)}</span>
-                <span className='ml-48'>{' '}{problem.score}</span>
-            </div>
-        </div>
+        <tr className={`rounded bg-gray-200`}>
+            <td className="w-1/3 text-left py-3 px-4">
+                {problem.name}
+            </td>
+            <td className={`w-1/3 text-left py-3 px-4  ${color}`}>
+                {problem.score}
+            </td>
+            <td className="text-left py-3 px-4"></td>
+            <td className="text-left py-3 px-4">
+                {formatDate(problem.date)}
+            </td>
+        </tr>
     );
 }
 
