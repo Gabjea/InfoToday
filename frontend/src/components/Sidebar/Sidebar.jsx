@@ -16,7 +16,6 @@ export default function Sidebar({ socket }) {
         { title: "Probleme", src: faBook, route: '/probleme' },
         { title: "Account", src: CookieManager.getCookie('jwt') ? faUserCheck : faUser, route: '/account' },
         { title: 'Mesaje', src: faComment, route: '/messages' },
-        { title: 'Creaza sesiune', src: faCalendarPlus, route: '/create-session' },
         { title: 'aplicari', src: faClipboard, route: '/applies' },
         { title: 'Sign out', src: faArrowRightFromBracket, route: '/signout', gap: true }
     ]);
@@ -30,6 +29,11 @@ export default function Sidebar({ socket }) {
                 })
                 setMenus(prev => {
                     prev.splice(Menus.length - 1, 0, { title: 'Payment', src: faCreditCard, route: '/pay' });
+                    return prev;
+                })
+            } else if (role === 'teacher') {
+                setMenus(prev => {
+                    prev.splice(Menus.length - 1, 0, { title: 'Creaza sesiune', src: faCalendarPlus, route: '/create-session' });
                     return prev;
                 })
             }

@@ -9,7 +9,7 @@ function Session({ session }) {
 
     return (
         <div
-            className='w-full  rounded overflow-hidden h-auto border border-gray-300 shadow shadow-lg'
+            className='w-full rounded overflow-hidden h-auto border border-gray-300 shadow shadow-lg'
             key={session._id}>
             <p>cu: <i>{'  '}{session.name}</i></p>
             <div>inteval: {'  '}

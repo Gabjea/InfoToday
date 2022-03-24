@@ -22,6 +22,7 @@ import Problems from "./components/Problems/Problems";
 import CreateSession from "./components/CreateSession/CreateSession";
 import AddMoney from './components/AddMoney/AddMoney';
 import Session from "./components/Session/Session";
+import './App.css';
 
 export default function App() {
 

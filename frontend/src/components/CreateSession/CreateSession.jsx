@@ -1,8 +1,18 @@
 import React from 'react';
 import { formatDate } from '../../utils/DateTime';
-import { axiosAuthInstanceToAPI } from '../../utils/serverAPI';
+import { axiosAuthInstanceToAPI, getUserDataFromJwtReq } from '../../utils/serverAPI';
 
 function CreateSession(props) {
+
+    React.useEffect(() => {
+        getUserDataFromJwtReq().then(({ role }) => {
+            console.log(role);
+            if (role === 'student') {
+                window.location.assign('/');
+            }
+        })
+    }, [])
+
     const [students, setStudents] = React.useState([]);
 
     React.useEffect(() => {
@@ -28,6 +38,12 @@ function CreateSession(props) {
         //console.log(Math.abs((new Date(endDate)).getHours() - (new Date(startDate)).getHours() ) );
         const startDate = formatDate(startDateStr);
         const endDate = formatDate(endDateStr);
+
+
+        if (startDate === 'Invalid Date' || endDate === 'Invalid Date' || cost <= 0) {
+            alert('Date invalida!')
+            return;
+        }
 
         axiosAuthInstanceToAPI.post('/teacher/session/create', {
             startDate, endDate, studentId, cost
