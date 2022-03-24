@@ -6,15 +6,25 @@ export default function Teacher({ id, pic, name, desc }) {
 
     const handleApplyClick = event => {
         event.preventDefault();
-        //console.log(id, CookieManager.getCookie('jwt'));
 
-        
         axiosAuthInstanceToAPI.post(`/teacher/apply/${id}`).then(res => {
             //console.log(res.data);
             alert(res.data);
         }, err => {
             alert('Error!');
         })//*/
+    }
+
+    const handleMessageClick = event => {
+        event.preventDefault();
+
+        axiosAuthInstanceToAPI.post(`/user/chat/conversation/${id}`).then(res => {
+            console.log(res.data);
+            //alert(res.data);
+            return window.location.assign('/messages');
+        }, err => {
+            alert("ERROR!");
+        })
     }
 
     return (
@@ -32,7 +42,7 @@ export default function Teacher({ id, pic, name, desc }) {
                     </div>
                 </div>
                 <div className='flex justify-center'>
-                    <button 
+                    <button onClick={handleMessageClick}
                     type="button" className="text-white bg-gradient-to-r from-blue-500
                      via-blue-600 to-blue-700 hover:bg-gradient-to-br
                       focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800

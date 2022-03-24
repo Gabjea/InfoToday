@@ -67,14 +67,26 @@ export default function PaymentForm() {
         }
     }
 
+    React.useEffect(() => {
+        if (success) {
+            alert('Tranzactie incheiata cu succes!');
+            window.location.assign('/dashboard');
+            return null;
+        }
+    }, [success])
+
     return (
         <>
 
-            {!success ?
+            {
                 <form onSubmit={handleSubmit}>
-                    <input onChange={e => setAmountToAdd(Number(e.target.value))} type="text" placeholder="cantitate"
-                        className="appearance-none block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500" />
-                    <br />
+                    <div className="">
+                        <input onChange={e => setAmountToAdd(Number(e.target.value))} type="text" placeholder="cantitate"
+                            className=" 
+                        appearance-none block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
+                        />
+                        <br />
+                    </div>
                     <fieldset className="FormGroup">
                         <div className="FormRow">
                             <CardElement options={CARD_OPTIONS} />
@@ -82,10 +94,7 @@ export default function PaymentForm() {
                     </fieldset>
                     <button className="stripe">Pay</button>
                 </form>
-                :
-                <div>
-                    <h2>Tranzactie incheiata cu succes!</h2>
-                </div>
+
             }
 
         </>

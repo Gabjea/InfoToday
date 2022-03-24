@@ -1,6 +1,6 @@
 import React from 'react';
 
-function Session({ session, socket }) {
+function Session({ session }) {
     const handleClick = event => {
         event.preventDefault();
         const id = session.session._id;

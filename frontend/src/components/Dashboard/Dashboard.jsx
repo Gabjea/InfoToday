@@ -9,7 +9,7 @@ export default function Dashboard(props) {
         <div style={{ 'overflow': 'hidden' }} className='text-lg'>
             <Topbar />
             <div className='flex'>
-                <Sessions socket={props.socket} />
+                <Sessions />
                 <SolvedPbs />
             </div>
         </div>

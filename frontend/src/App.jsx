@@ -15,51 +15,15 @@ import Teachers from "./components/Teachers/Teachers";
 import Applies from "./components/Applies/Applies";
 import Account from "./components/Account/Account";
 import Messages from "./components/Messages/Messages";
-import { baseWsURL } from './utils/serverAPI';
-import io from 'socket.io-client';
 import CookieManager from "./utils/CookieManager";
 import Signout from "./components/Signout/Signout";
 import UploadPb from "./components/UploadPb/UploadPb";
 import Problems from "./components/Problems/Problems";
-import RtcStream from "./components/RtcStream/RtcStream";
 import CreateSession from "./components/CreateSession/CreateSession";
 import AddMoney from './components/AddMoney/AddMoney';
 import Session from "./components/Session/Session";
 
-const socket = io(baseWsURL);
-
 export default function App() {
-    /*
-    const [connected, setConnected] = React.useState();
-
-    React.useEffect(() => {
-
-        socket.on('connected', message => {
-            //console.log(message);
-            setConnected(message);
-        })
-
-        socket.on('connect-user', message => {
-            //console.log(message);
-            const jwt = CookieManager.getCookie('jwt');
-            if (jwt) {
-                //console.log(jwt);
-                console.log(1);
-                socket.emit('connect-user', jwt);
-            }
-        })
-        //console.log('here');
-
-        
-        return () => socket.close();
-    }, [])
-
-    React.useEffect(() => {
-        if (connected) {
-            socket.emit('join-session', '');
-        }
-    }, [connected])
-//*/
 
     const [isAuth] = React.useState(() => CookieManager.getCookie('jwt') != null);
 
@@ -67,22 +31,22 @@ export default function App() {
     return (
         <Router>
             <div className="md:flex ">
-                <Sidebar socket={socket} />
+                <Sidebar  />
                 <div className="w-screen ">
 
                     <Routes>
                         {<Route index element={!isAuth ? <Home /> : <Navigate replace to="dashboard" />} />}
 
-                        {<Route path="/dashboard" element={isAuth ? <Dashboard socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/teachers" element={isAuth ? <Teachers socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/applies" element={isAuth ? <Applies socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/account" element={isAuth ? <Account socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/messages" element={isAuth ? <Messages socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/upload-pb" element={isAuth ? <UploadPb socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/probleme" element={isAuth ? <Problems socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/create-session" element={isAuth ? <CreateSession socket={socket} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/pay" element={isAuth ? <AddMoney socket={null} /> : <Navigate replace to="/login" />} />}
-                        {<Route path="/session/:id" element={isAuth ? <Session socket={null} /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/dashboard" element={isAuth ? <Dashboard  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/teachers" element={isAuth ? <Teachers  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/applies" element={isAuth ? <Applies  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/account" element={isAuth ? <Account  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/messages" element={isAuth ? <Messages  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/upload-pb" element={isAuth ? <UploadPb  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/probleme" element={isAuth ? <Problems  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/create-session" element={isAuth ? <CreateSession  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/pay" element={isAuth ? <AddMoney  /> : <Navigate replace to="/login" />} />}
+                        {<Route path="/session/:id" element={isAuth ? <Session  /> : <Navigate replace to="/login" />} />}
 
                         {/* !auth */}
                         <Route path="/register" element={<Register />} />
@@ -90,7 +54,6 @@ export default function App() {
                         <Route path="/signout" element={<Signout />} />
 
 
-                        <Route path="/rtc" element={<RtcStream socket={socket} />} />
 
 
                         <Route path="*" element={<Pg404 />} />

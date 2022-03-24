@@ -22,6 +22,7 @@ int main(){
 
     const [socket, setSocket] = React.useState(null);
     React.useEffect(() => {
+        console.log('coding-ground');
         const auxSocket = props.socket;
 
         setSocket(auxSocket);
