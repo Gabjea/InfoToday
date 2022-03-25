@@ -12,16 +12,11 @@ export default function Session() {
     const [role, setRole] = React.useState();
 
     React.useEffect(() => {
+        window.onbeforeunload = () => alert()
         getUserDataFromJwtReq().then(({ role, coins }) => {
             setRole(role);
         })
     }, [])
-
-    React.useEffect(() => {
-        if (role === 'student') {
-            socket.emit('pay', sessionId);
-        }
-    }, [role, sessionId])
 
     React.useEffect(() => {
 
@@ -40,7 +35,7 @@ export default function Session() {
         //console.log('here');
 
         socket.on('end-session', () => {
-            alert();
+          
             window.location.assign('/');
         })
 
@@ -55,9 +50,10 @@ export default function Session() {
 
     return (
         <div>
-            {
-                role === 'teacher' && <button onClick={handleEndCLick}>end</button>
-            }
+            <div className="flex items-center justify-end px-3 mt-5">
+            <p className="text-xl">Session: #{sessionId}</p>
+            <button className="bg-purple-500 ml-2 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded " onClick={handleEndCLick}>end</button>
+            </div>
 
             <Problems socket={socket} />
         </div>

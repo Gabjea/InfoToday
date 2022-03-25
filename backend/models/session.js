@@ -26,6 +26,11 @@ const SessionSchema = mongoose.Schema({
         type: String,
         required: true,
         default: "ongoing"
+    },
+    accepted: {
+        type: Boolean,
+        required: true,
+        default: false
     }
 })
 

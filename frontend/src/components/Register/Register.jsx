@@ -39,7 +39,7 @@ export default function Register() {
                             src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
                             alt="Workflow"
                         />
-                        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Create your account</h2>
+                        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">Creaza un cont</h2>
                         <p className="mt-2 text-center text-sm text-gray-600">
 
                         </p>

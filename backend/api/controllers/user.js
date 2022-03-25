@@ -147,7 +147,7 @@ const uploadProfilePictureController = async (req, res) => {
             });
         else {
             await functions.updateUserProfile(token, { profile_pic: process.env.HOST + path })
-       
+
             res.status(200).json({ message: "Ti-ai actualizat poza de profil cu succes!" })
         }
 
@@ -176,25 +176,25 @@ const getUserChats = async (req, res) => {
     const user_id = jwtDecoder(req.headers.authorization).id
     let convesations = []
 
-    await Conversation.find({ $or: [{ user1: user_id }, {user2:user_id }] }, async(err ,result) =>{
+    await Conversation.find({ $or: [{ user1: user_id }, { user2: user_id }] }, async (err, result) => {
         if (err) res.send(err)
         let chattingWith = {}
-        for(const conf of result){
-            if(user_id !== conf.user1){
+        for (const conf of result) {
+            if (user_id !== conf.user1) {
                 chattingWith = await User.findById(conf.user1)
             }
             else {
                 chattingWith = await User.findById(conf.user2)
             }
-            
+
             convesations.push({ room: conf._id, id: chattingWith._id, name: chattingWith.name + " " + chattingWith.surname, pic: chattingWith.profile_pic })
 
         }
         res.send(convesations)
-        
+
     }).clone()
 
-   
+
 }
 
 const getUserMessagesFromPerson = async (req, res) => {
@@ -216,7 +216,7 @@ const getAllProblems = async (req, res) => {
 
     }).clone()
 
-  
+
 
     res.send(problems)
 
@@ -227,7 +227,7 @@ const getAllUserSessions = async (req, res) => {
     const user_role = jwtDecoder(req.headers.authorization).role
 
     let sessions_info = []
-    const sessions = await Session.find({ $or: [{ student: user_id, status:"ongoing" }, { teacher: user_id, status:"ongoing" }] })
+    const sessions = await Session.find({ $or: [{ student: user_id, status: "ongoing" }, { teacher: user_id, status: "ongoing" }] })
 
     for (const session of sessions) {
         let result = {}
@@ -270,7 +270,7 @@ const compileProblem = async (req, res) => {
 
             tests.push(stdout?.trim() === problema.tests[index].output.trim() ? 100 / problema.tests.length : 0)
 
-     
+
 
         }
         console.log(tests);
@@ -365,8 +365,8 @@ const getMyProblems = async (req, res) => {
 
     Submit.find({ user: user_id }, async (err, result) => {
         //let applies_info = []
-      
-        
+
+
         for (const submission of result) {
             await Problem.findOne({ _id: submission.problem }).then(problem => {
                 submissions.push({ name: problem.name, date: submission.date, score: submission.score })
@@ -378,14 +378,14 @@ const getMyProblems = async (req, res) => {
     })
 }
 
-const createConversation = async(req, res ) => {
+const createConversation = async (req, res) => {
     const user_id = jwtDecoder(req.headers.authorization).id
     const teacher_id = req.params.id
-    console.log(user_id,teacher_id);
-    const alreadyExistsConversation = await Conversation.findOne({ $or: [{ user1: user_id, user2:teacher_id }, { user1: teacher_id, user2:user_id }] })
+    console.log(user_id, teacher_id);
+    const alreadyExistsConversation = await Conversation.findOne({ $or: [{ user1: user_id, user2: teacher_id }, { user1: teacher_id, user2: user_id }] })
 
-    
-    if(alreadyExistsConversation)
+
+    if (alreadyExistsConversation)
         return res.send('Exista deja o conversatie.')
 
 
@@ -405,6 +405,26 @@ const createConversation = async(req, res ) => {
     }
 }
 
+const acceptSession = async(req, res) => {
+    const session_id = req.params.id
+
+    const session = await Session.findById(session_id)
+
+    let newTeacherBalance = await User.findByIdAndUpdate(session.teacher, { $inc: { coins: session.cost } }, {
+        new: true
+    })
+
+    let newUserBalance = await User.findByIdAndUpdate(session.student, { $inc: { coins: -session.cost } }, {
+        new: true
+    })
+
+
+    let newSessionAcceptedStatus = await Session.findByIdAndUpdate(session_id, { accepted: true }, {
+        new: true
+    })
+
+    res.send('')
+}
 
 
 module.exports = {
@@ -424,5 +444,6 @@ module.exports = {
     compileProblem,
     buyCoins,
     getMyProblems,
-    createConversation
+    createConversation,
+    acceptSession
 };

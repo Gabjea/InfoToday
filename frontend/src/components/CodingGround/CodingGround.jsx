@@ -33,9 +33,7 @@ int main(){
 
         auxSocket?.on('move-cursor', message => {
             const { pageX, pageY } = message.pos;
-            if (pageX > window.innerWidth - (5 / 100) * window.innerWidth || pageX < 0 || pageY > window.innerHeight || pageY < 0) {
-                //return;
-            }
+           
             setPos({ x: pageX, y: pageY });
             setName(message.name);
         })//*/
@@ -53,11 +51,13 @@ int main(){
     React.useEffect(() => {
         document.onmousemove = event => {
             const { pageX, pageY } = event;
-            props.socket?.emit('move-cursor', ({ pageX, pageY }));
+            
+            props.socket?.emit('move-cursor', ({ pageX: pageX, pageY }));
         }
     }, [props.socket])//*/
 
     React.useEffect(() => {
+        
         refToMov.current.style.left = `${pos.x}px`;
         refToMov.current.style.top = `${pos.y}px`;
     })
@@ -98,18 +98,20 @@ int main(){
             </div>
             
             
-            <div ref={refToMov} id="movable" style={{ 'overflow': 'hidden', 'color': 'blue', 'position': 'absolute', 'left': 0, 'top': 0, 'userSelect': 'none' }}>
-                <FontAwesomeIcon icon={faArrowPointer} />
+            {<div ref={refToMov}
+            className = "text-pink-600"
+            id="movable" style={{ 'overflow': 'hidden', 'position': 'absolute', 'left': 0, 'top': 0, 'userSelect': 'none' }}>
+                <FontAwesomeIcon  icon={faArrowPointer}     />
                 <small style={{ 'overflow': 'hidden' }}> {name} </small>
-            </div>
+            </div>}
 
             
-            <div>
+            <div className='text-xl'>
                 {
-                    answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'}`}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div>)
+                    answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'} `}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div>)
                 }
             </div>
-            <button className='bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded ' onClick={handleSubmit} id='submit-code'>Evalueaza</button>
+            <button className='' onClick={handleSubmit} id='submit-code'>Evalueaza</button>
         </div>
     );
 }

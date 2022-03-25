@@ -1,10 +1,12 @@
 import React from 'react';
+import { useParams } from "react-router-dom";
 import { axiosAuthInstanceToAPI } from '../../utils/serverAPI';
 import Problem from './Problem';
 import ProblemBox from './ProblemBox';
 import { CATEGORIES } from './../../utils/constants';
 
 export default function Problems({ socket }) {
+    const { id: sessionId } = useParams();
 
     const [fetchedData, setfetchedData] = React.useState([]);
     const [problems, setProblems] = React.useState([]);
@@ -13,6 +15,8 @@ export default function Problems({ socket }) {
     const [selInp, setSelInp] = React.useState('*');
 
     React.useEffect(() => {
+        
+
         axiosAuthInstanceToAPI.get('/user/problems').then(res => {
             //console.log(res.data);
             setfetchedData(res.data);
@@ -53,15 +57,17 @@ export default function Problems({ socket }) {
             setDisplayed('');
             setSrcInp('');
             setSelInp('*');
+            setTimeout(() => {
+                window.location.reload();
+            }, 500);
         })
     }, [socket])
 
     const handleBackClick = event => {
         event.preventDefault();
-        setDisplayed('');
-        setSrcInp('');
-        setSelInp('*');
+        
         socket?.emit('back');
+        //window.location.reload();
     }
 
     return (

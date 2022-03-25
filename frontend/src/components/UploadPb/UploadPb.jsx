@@ -38,20 +38,34 @@ export default function UploadPb(props) {
     }
 
     return (
-        <div>
-            <br />
-            <form onSubmit={handleSubmit}>
-                <input placeholder={`input`} className='border border-gray-500' type="text" ref={nameRef} />
-                <br />
-                <label for="category">Choose category:</label> <br />
-                <select id="category" name="categories" ref={categorySelRef}>
+        <div className='h-screen flex items-center justify-center'>
+            
+            <form className='w-1/2' onSubmit={handleSubmit}>
+            <div className="w-full md:w-full mb-2">
+          <label className="text-2xl">
+            Nume:
+          </label>
+          <input
+            className="appearance-none block w-full bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500"
+            ref={nameRef}
+            type="text"
+            name="name"
+            placeholder="Nume"
+          />
+        </div>
+               
+                <label className='text-2xl' for="category">Alege o categorie:</label> <br />
+                <select className='w-full mb-5 block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-2 px-4 leading-tight focus:outline-none  focus:border-gray-500' id="category" name="categories" ref={categorySelRef}>
                     {
                         CATEGORIES.map(key => <option value={key}>{key}</option>)
                     }
                 </select>
-                <br /><br />
-                <textarea required className='border border-gray-500' type="text" ref={statementRef} />
+               
+                <p className='text-2xl'>Enunt:</p>
+                <textarea required className='bg-gray-100 px-4 rounded-md border leading-normal w-full h-40  shadow-inner border border-gray-400 font-medium placeholder-gray-700 focus:outline-none focus:bg-white' type="text" ref={statementRef} />
+                
                 <br />
+                <p className='text-2xl'>Numar teste:</p>
                 <input type="number"
                     placeholder={`${MIN_TESTS}-${MAX_TESTS}`}
                     onChange={event => setNrTests(() => {
@@ -60,14 +74,15 @@ export default function UploadPb(props) {
                         value = Math.min(value, MAX_TESTS);
                         return (value);
                     })}
-                    className='border border-gray-500' />
+                    className='w-full  border border-gray-700 appearance-none block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500' />
                 {
                     [...Array(nrTests)].map(() => {
                         return <div> <Test key={Math.random()} id={id++} refToInput={refInp} refToOutput={refOut} /> </div>
                     })
                 }
                 <br />
-                <input type="submit" />
+               
+                <input className='text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-md px-5 py-2.5 text-center  w-full' type="submit" />
             </form>
         </div>
     );
