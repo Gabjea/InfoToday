@@ -227,7 +227,7 @@ const getAllUserSessions = async (req, res) => {
     const user_role = jwtDecoder(req.headers.authorization).role
 
     let sessions_info = []
-    const sessions = await Session.find({ $or: [{ student: user_id }, { teacher: user_id }] })
+    const sessions = await Session.find({ $or: [{ student: user_id, status:"ongoing" }, { teacher: user_id, status:"ongoing" }] })
 
     for (const session of sessions) {
         let result = {}

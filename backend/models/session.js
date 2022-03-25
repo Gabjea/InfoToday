@@ -18,6 +18,15 @@ const SessionSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    cost: {
+        type: Number,
+        required: true
+    },
+    status: {
+        type: String,
+        required: true,
+        default: "ongoing"
+    }
 })
 
 module.exports = mongoose.model('Session', SessionSchema)

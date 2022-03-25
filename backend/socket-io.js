@@ -1,8 +1,9 @@
 const functions = require('./api/functions')
 const Message = require('./models/message')
 const mongoose = require('./database/index');
-const axios = require("axios")
-
+const axios = require("axios");
+const Session = require('./models/session');
+const User = require('./models/user');
 
 const socket_io = (server) => {
 
@@ -61,7 +62,37 @@ const socket_io = (server) => {
             socket.broadcast.to(socket.room).emit('back')
         })
 
+        socket.on('pay', async data => {
+            const session = await Session.findById(data)
+            
+            let newTeacherBalance = await User.findByIdAndUpdate(session.teacher, { $inc: { coins: session.cost }},{
+                new: true
+              })
 
+              let newUserBalance =await User.findByIdAndUpdate(session.student, { $inc: { coins: -session.cost }},{
+                new: true
+              })
+
+
+
+        })
+
+
+        socket.on('end-session', async data =>{ 
+
+
+            await Session.findByIdAndUpdate(data, {status: 'ended'}, (err, result) =>{
+                if (err) console.log(err);
+                
+              
+            }).clone()
+
+
+            io.to(socket.room).emit('end-session')
+
+
+
+        })
 
 
         socket.on('send-message', async data => {
