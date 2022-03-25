@@ -85,10 +85,17 @@ export default function Problems({ socket }) {
                     <input type="text" placeholder='search by name'
                         className='appearance-none  block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md py-3 px-4 leading-tight focus:outline-none  focus:border-gray-500' onChange={handleInputChange} /> <br />
                     <p className='text-xl'>Categorie:</p>
-                    <select className=' block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md  px-4 leading-tight focus:outline-none  focus:border-gray-500' name="category" id="category" onChange={handleSelChange}>
+                    <select  className=' block bg-white text-gray-700 border border-gray-400 shadow-inner rounded-md  px-4 leading-tight focus:outline-none  focus:border-gray-500' name="category" id="category" onChange={handleSelChange}>
+                    
+                    
                         {
-
-                            ['*', ...CATEGORIES].map(category => <option key={Math.random()} className='' value={category}>{category}</option>)
+                            
+                            CATEGORIES.map(category =>{ 
+                                if(selInp === category)
+                                    return <option selected key={Math.random()} className='' value={category}>{category}</option>
+                                
+                                else return <option key={Math.random()} className='' value={category}>{category}</option>
+                            })
                         }
                     </select>
                     <br />
