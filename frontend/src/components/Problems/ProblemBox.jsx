@@ -6,6 +6,7 @@ export default function ProblemBox({ problem, setDisplayed, socket }) {
         socket?.on('display-problem', pbName => {
             setDisplayed(pbName);
         })
+        
     }, [socket, setDisplayed])
 
     const handleClick = event => {
@@ -23,9 +24,9 @@ export default function ProblemBox({ problem, setDisplayed, socket }) {
             
             <div className='px-3'>
 
-                <p className='text-md'>Se dă o tablă dreptunghiulară formată din n linii și m coloane, definind n*m zone, unele dintre ele fiind libere, altele conținând obstacole. În zona aflată la poziția is, js se află un șoarece care se poate deplasa pe tablă trecând din zona curentă în zona învecinată cu aceasta pe linie sau pe coloană. Scopul sau este să ajungă la o bucată de brânză aflată în zona de la poziția ib, jb, fără a părăsi tabla, fără a trece prin zone care conțin obstacole și fără a trece de două ori prin aceeași zonă.
-
-                    Determinați câte modalități prin care șoarecele poate ajunge de la poziția inițială la cea a bucății de brânză există.</p>
+                <p className='text-md'>
+                    {problem.text}
+                    </p>
             </div>
             <div className='flex justify-end'>
 

@@ -29,7 +29,7 @@ router.post('/problem/evaluate/:nume', middlewares.Auth, controller.compileProbl
 router.get('/problems', middlewares.Auth, controller.getAllProblems)
 router.get('/problems/mine', middlewares.Auth, controller.getMyProblems)
 router.get('/sessions', middlewares.Auth, controller.getAllUserSessions)
-
+router.post('/session/accept/:id', middlewares.Auth, controller.acceptSession)
 router.post('/payment', middlewares.Auth, controller.buyCoins)
 
 module.exports = router

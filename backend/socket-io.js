@@ -37,7 +37,7 @@ const socket_io = (server) => {
 
         socket.on("disconnect", (reason) => {
 
-
+            
             const delSocketIndex = sockets.findIndex((discSocket) => discSocket.socket_id === socket.id)
 
 
@@ -59,23 +59,10 @@ const socket_io = (server) => {
         })
 
         socket.on('back', data =>{
-            socket.broadcast.to(socket.room).emit('back')
+            io.to(socket.room).emit('back')
         })
 
-        socket.on('pay', async data => {
-            const session = await Session.findById(data)
-            
-            let newTeacherBalance = await User.findByIdAndUpdate(session.teacher, { $inc: { coins: session.cost }},{
-                new: true
-              })
-
-              let newUserBalance =await User.findByIdAndUpdate(session.student, { $inc: { coins: -session.cost }},{
-                new: true
-              })
-
-
-
-        })
+        
 
 
         socket.on('end-session', async data =>{ 
@@ -154,7 +141,6 @@ const socket_io = (server) => {
 
         socket.on('move-cursor', async data => {
             if (isName) {
-
                 socket.broadcast.to(socket.room).emit('move-cursor', {
                     pos: data,
                     name: socket.user.name + " " + socket.user.surname
