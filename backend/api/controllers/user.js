@@ -265,8 +265,9 @@ const compileProblem = async (req, res) => {
     try {
 
         for (const index in problema.tests) {
-
-            const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && c++ -O3 ${user_id}.cpp -o ${user_id}.exe && ${user_id}.exe < ./inputs/${index}.txt`)
+         
+           // const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && c++ -O3 ${user_id}.cpp -o ${user_id}.exe && ${user_id}.exe < ./inputs/${index}.txt`)
+           const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema}  && echo ${problema.tests[index].input} > ${user_id}.txt && c++ -O3 ${user_id}.cpp -o ${user_id}.exe && ${user_id}.exe < ${user_id}.txt && del ${user_id}.txt`)
 
             tests.push(stdout?.trim() === problema.tests[index].output.trim() ? 100 / problema.tests.length : 0)
 
@@ -274,6 +275,8 @@ const compileProblem = async (req, res) => {
 
         }
         console.log(tests);
+        const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema}  && del ${user_id}.cpp && del ${user_id}.exe`)
+
         const score = tests.reduce((x, y) => x + y)
         const newSubmit = new Submit({
             _id: new mongoose.Types.ObjectId(),
