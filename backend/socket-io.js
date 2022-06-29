@@ -16,6 +16,8 @@ const socket_io = (server) => {
 
     let sockets = []
 
+  
+
     io.on('connection', (socket) => {
         let isName = false;
         socket.emit('connect-user', 're')
@@ -25,6 +27,7 @@ const socket_io = (server) => {
             await functions.getUserByIdFromToken(token).then((user) => {
                 socket.user = user
                 isName = true
+    
             }).catch((err) => {
                 console.log(err);
             })
@@ -87,7 +90,7 @@ const socket_io = (server) => {
                 
                 io.to(socket.room).emit('send-message', { sender: socket.user._id, receiver: data.otherId, message: data.message })
 
-
+              
                 const newMessage = new Message({
                     _id: new mongoose.Types.ObjectId(),
                     sender: socket.user._id,
