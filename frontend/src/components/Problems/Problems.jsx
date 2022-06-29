@@ -75,7 +75,7 @@ export default function Problems({ socket }) {
             
             
             {displayedPb && <button onClick={handleBackClick}
-                className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded mt-20"
+                className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded mt-5"
             >
                 back
             </button>}
