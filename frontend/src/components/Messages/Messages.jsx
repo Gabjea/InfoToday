@@ -29,7 +29,7 @@ export default function Messages() {
         })
         //console.log('here');
 
-        
+
         return () => socket.close();
     }, [])
 
@@ -73,7 +73,7 @@ export default function Messages() {
     }
 
     React.useEffect(() => {
-        axiosAuthInstanceToAPI.get('/user/chats').then(res => {            
+        axiosAuthInstanceToAPI.get('/user/chats').then(res => {
             setChatHeads(res.data.reverse());
         }, err => {
             console.error(err);
@@ -96,6 +96,15 @@ export default function Messages() {
             return;
         }
         //setMessages(preMessages => [...preMessages, mesText]);
+        
+        if (userChatData?.otherId) {
+            const otherId = userChatData?.otherId;
+            let index = chatHeads.findIndex(chatHead => chatHead.id === otherId);
+            let deleted = chatHeads[index];
+            chatHeads.splice(index, 1);
+            setChatHeads([deleted, ...chatHeads]);
+        }
+        //*/
         socket.emit('send-message', { otherId: userChatData?.otherId, message: mesText });
     }
 
@@ -130,7 +139,7 @@ export default function Messages() {
         <div className="flex h-screen antialiased text-gray-800" >
             <div className="flex flex-row h-full w-full overflow-x-hidden" >
                 <div className="flex flex-col mt-2 pl-6 pr-2 w-64 bg-white flex-shrink-0" >
-                    
+
                     <div
                         className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
                     >
@@ -210,7 +219,7 @@ export default function Messages() {
                             <div className="flex-grow ml-4">
                                 <div className="relative w-full">
                                     <input
-                                        onKeyDown={handleKeyDown }
+                                        onKeyDown={handleKeyDown}
                                         onChange={handleInpChange}
                                         placeholder={`type message here(max ${MAX_CHARS} characters)`}
                                         ref={txtInputRef}

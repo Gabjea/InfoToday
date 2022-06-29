@@ -50,7 +50,7 @@ export default function PaymentForm() {
                 const currAmount = (await getUserDataFromJwtReq()).coins;
 
                 const response = await axiosAuthInstanceToAPI.post("/user/payment", {
-                    amount: currAmount + amountToAdd,
+                    amount: amountToAdd,
                     id
                 })
 
