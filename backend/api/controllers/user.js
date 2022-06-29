@@ -344,7 +344,7 @@ const buyCoins = async (req, res) => {
         })
 
 
-        await User.findByIdAndUpdate(user_id, { coins: amount }).then(() => {
+        await User.findByIdAndUpdate(user_id, { $inc: { coins: amount } }).then(() => {
             res.json({
                 message: "Payment successful",
                 success: true
