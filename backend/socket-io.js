@@ -4,6 +4,7 @@ const mongoose = require('./database/index');
 const axios = require("axios");
 const Session = require('./models/session');
 const User = require('./models/user');
+const user = require('./models/user');
 
 const socket_io = (server) => {
 
@@ -43,6 +44,8 @@ const socket_io = (server) => {
             
             const delSocketIndex = sockets.findIndex((discSocket) => discSocket.socket_id === socket.id)
 
+            if(isName)
+                socket.broadcast.to(socket.room).emit('remove-user-session', socket.user._id)
 
             sockets.splice(delSocketIndex, 1)
 
@@ -152,12 +155,30 @@ const socket_io = (server) => {
         })
 
         socket.on('join-room', async (room) => {
-            socket.join(room)
-            socket.room = room
+            if(isName){
 
+                socket.join(room)
+                socket.room = room
+                socket.broadcast.to(socket.room).emit('user-joined-session', {
+                    name: socket.user.name,
+                    profile_pic: socket.user.profile_pic,
+                    _id: socket.user._id
+                })
+                socket.broadcast.to(socket.room).emit('send-user-info')
+            }
         })
 
+        socket.on('send-user-info', async (data) => {
+            if(isName){
 
+                socket.broadcast.to(socket.room).emit('user-joined-session', {
+                    name: socket.user.name,
+                    profile_pic: socket.user.profile_pic,
+                    _id: socket.user._id
+                })
+               
+            }
+        })
 
     })
 
