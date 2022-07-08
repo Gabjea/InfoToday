@@ -374,7 +374,7 @@ const getMyProblems = async (req, res) => {
             await Problem.findOne({ _id: submission.problem }).then(problem => {
                 submissions.push({ name: problem.name, date: submission.date, score: submission.score })
             }).catch(err => {
-                console.log(err)
+                
             })
         }//*/
         res.send(submissions);
@@ -448,5 +448,5 @@ module.exports = {
     buyCoins,
     getMyProblems,
     createConversation,
-    acceptSession
+    acceptSession,
 };
