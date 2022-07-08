@@ -11,7 +11,26 @@ const socket = io(baseWsURL);
 export default function Session() {
     const { id: sessionId } = useParams();
 
+    const [members, setMembers] = React.useState([]);
+    const [selfData, setSelfData] = React.useState(null);
+
     React.useEffect(() => {
+        getUserDataFromJwtReq().then(data => {
+            setSelfData(data);
+            //console.log(data);
+        })
+    }, [])
+
+    React.useEffect(() => {
+
+        socket.on('send-user-info', data => {
+            socket.emit('send-user-info', selfData);
+
+        })
+
+        socket.on('user-joined-session', data => {
+            setMembers(prevMems => [...prevMems, data])
+        })
 
         socket.on('connected', message => {
             socket.emit('join-room', sessionId);
@@ -32,19 +51,24 @@ export default function Session() {
             window.location.assign('/');
         })
 
+        socket.on('remove-user-session', data => {
+            setMembers(prevMems => {
+                return prevMems.filter(mem => mem._id !== data);
+            })
+        })
+
         return () => socket.close();
     }, [sessionId])
 
-    const [members, setMembers] = React.useState([]);
     React.useEffect(() => {
-        getUserDataFromJwtReq().then(data => {
-            setMembers(prevMems => [...prevMems, data])
-        })
-    }, [])
+        if (selfData != null) {
+            setMembers(prevMems => [...prevMems, selfData])
+        }
+    }, [selfData])
 
     const handleEndCLick = event => {
         event.preventDefault();
-
+        console.log('end', sessionId);
         socket.emit('end-session', sessionId);
     }
 

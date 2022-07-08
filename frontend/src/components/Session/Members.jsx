@@ -7,8 +7,8 @@ export default function Members({ members }) {
             members:
             {
                 members.map(member => 
-                    <div>
-                        <img className='rounded-full w-10 h-10' src={member.profile_pic} alt="" />
+                    <div key={Math.random()}>
+                        <img className='rounded-full w-10 h-10' src={member.profile_pic} alt="*" />
                         {member.name}
                     </div>    
                 )
