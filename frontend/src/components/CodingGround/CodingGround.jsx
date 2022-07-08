@@ -34,7 +34,7 @@ int main(){
         auxSocket?.on('move-cursor', message => {
             const { pageX, pageY } = message.pos;
            
-            setPos({ x: pageX, y: pageY });
+            setPos({ x: pageX * window.innerWidth, y: pageY * window.innerHeight });
             setName(message.name);
         })//*/
 
@@ -52,7 +52,10 @@ int main(){
         document.onmousemove = event => {
             const { pageX, pageY } = event;
             
-            props.socket?.emit('move-cursor', ({ pageX: pageX, pageY }));
+            props.socket?.emit('move-cursor', ({ 
+                pageX: pageX / window.innerWidth,
+                 pageY: pageY / window.innerHeight
+            }));
         }
     }, [props.socket])//*/
 
