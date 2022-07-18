@@ -18,14 +18,10 @@ const api = require('./api')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+
 app.use(morgan("dev"));
 app.use(helmet());
-
+app.use(cors());
 
 const functions = require('./api/functions')
 const Message = require('./models/message')
