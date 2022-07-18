@@ -5,9 +5,9 @@ import CookieManager from "./CookieManager";
 //ganju's: 79.113.193.173
 export const host = 'backend-infotoday.herokuapp.com';
 export const hostWithPort = `${host}:5000`;
-export const baseHttpURL = `https://${hostWithPort}`;
+export const baseHttpURL = `https://${host}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
-export const baseWsURL = `ws://${hostWithPort}`;
+export const baseWsURL = `ws://${host}`;
 const timeout = 30000e3;
 
 export const axiosInstanceToAPI = axios.create({
