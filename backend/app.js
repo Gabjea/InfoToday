@@ -21,19 +21,8 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(
-  cors({
-    origin: "*",
-  })
-);
 
-app.use(function (req, res, next) {res.setHeader("Access-Control-Allow-Origin", "*")
-res.setHeader("Access-Control-Allow-Credentials", "true");
-res.setHeader("Access-Control-Max-Age", "1800");
-res.setHeader("Access-Control-Allow-Headers", "content-type");
-res.setHeader( "Access-Control-Allow-Methods", "PUT, POST, GET, DELETE, PATCH, OPTIONS" ); 
-  next();
-});
+
 const functions = require('./api/functions')
 const Message = require('./models/message')
 const mongoose = require('./database/index');
