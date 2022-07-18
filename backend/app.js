@@ -21,12 +21,16 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 app.use(helmet());
-const corsOptions ={
-   origin:'*', 
-   credentials:true,            //access-control-allow-credentials:true
-   optionSuccessStatus:200,
-}
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: "*",
+  })
+);
+
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  next();
+});
 const functions = require('./api/functions')
 const Message = require('./models/message')
 const mongoose = require('./database/index');
