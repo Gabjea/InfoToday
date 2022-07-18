@@ -3,9 +3,9 @@ import CookieManager from "./CookieManager";
 
 //school: 192.168.0.132:5000
 //ganju's: 79.113.193.173
-export const host = '79.113.216.88';
+export const host = 'backend-infotoday.herokuapp.com';
 export const hostWithPort = `${host}:5000`;
-export const baseHttpURL = `http://${hostWithPort}`;
+export const baseHttpURL = `https://${hostWithPort}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
 export const baseWsURL = `ws://${hostWithPort}`;
 const timeout = 30000e3;
