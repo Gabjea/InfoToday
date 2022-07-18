@@ -22,9 +22,8 @@ app.use(express.json());
 app.use(morgan("dev"));
 app.use(helmet());
 app.use(cors({
-  origin: '*'
+  credentials: true,
 }));
-
 const functions = require('./api/functions')
 const Message = require('./models/message')
 const mongoose = require('./database/index');
