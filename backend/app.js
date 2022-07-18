@@ -18,7 +18,11 @@ const api = require('./api')
 
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 app.use(morgan("dev"));
 app.use(helmet());
 
