@@ -21,7 +21,9 @@ app.use(express.json());
 
 app.use(morgan("dev"));
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+  origin: '*'
+}));
 
 const functions = require('./api/functions')
 const Message = require('./models/message')
@@ -42,6 +44,19 @@ app.use("/api/v1", api);
 
 app.get("/uploads/icons/:img", controller.getUploadedIcon)
 
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization ,AuthorizationRefresh ,user'
+  );
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'OPTIONS, GET, POST, PATCH, DELETE'
+  );
+
+  next();
+});
 
 
 app.use(bodyParser.urlencoded({ extended: true }));
