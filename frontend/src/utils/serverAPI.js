@@ -7,7 +7,7 @@ export const host = 'backend-infotoday.herokuapp.com';
 export const hostWithPort = `${host}:5000`;
 export const baseHttpURL = `https://${host}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
-export const baseWsURL = `ws://${baseURLPref}`;
+export const baseWsURL = `ws://${baseHttpURL}`;
 const timeout = 30000e3;
 
 export const axiosInstanceToAPI = axios.create({
