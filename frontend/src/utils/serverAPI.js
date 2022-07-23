@@ -1,10 +1,9 @@
 import axios from "axios";
 import CookieManager from "./CookieManager";
 
-//school: 192.168.0.132:5000
-//ganju's: 79.113.193.173
-export const host = '79.113.216.88';
-export const hostWithPort = `${host}:5000`;
+
+export const host = 'localhost';
+export const hostWithPort = `${host}:3001`;
 export const baseHttpURL = `http://${hostWithPort}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
 export const baseWsURL = `ws://${hostWithPort}`;
@@ -19,6 +18,9 @@ export const axiosAuthInstanceToAPI = axios.create({
     baseURL: baseURLPref,
     timeout,
     headers: {
+        "Access-Control-Allow-Origin"   : "*",
+        "Access-Control-Allow-Methods" : "DELETE, POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers" : "Content-Type, Authorization, X-Requested-With",
         Authorization: CookieManager.getCookie('jwt')
     }
 });
