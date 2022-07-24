@@ -18,7 +18,7 @@ const SubmitSchema = mongoose.Schema({
     date: {
         type: Date,
         required: true,
-        default: new Date
+        default: Date.now
     }
 })
 

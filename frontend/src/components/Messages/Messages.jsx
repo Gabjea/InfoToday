@@ -2,6 +2,8 @@ import React from "react";
 import CookieManager from "../../utils/CookieManager";
 import { axiosAuthInstanceToAPI, getUserDataFromJwtReq } from "../../utils/serverAPI";
 import ChatHead from "./ChatHead/ChatHead";
+import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import FromMessage from "./ChatHead/MessageBox/FromMessage";
 import MyMessage from "./ChatHead/MessageBox/MyMessage";
 import { baseWsURL } from './../../utils/serverAPI';
@@ -138,7 +140,7 @@ export default function Messages() {
     return (
         <div className="flex h-screen antialiased text-gray-800" >
             <div className="flex flex-row h-full w-full overflow-x-hidden" >
-                <div className="flex flex-col mt-2 pl-6 pr-2 w-64 bg-white flex-shrink-0" >
+                <div className="flex flex-col mt-2 pl-6 pr-2 w-40 lg:w-64 bg-white flex-shrink-0" >
 
                     <div
                         className="flex flex-col items-center bg-indigo-100 border border-gray-200 mt-4 w-full py-6 px-4 rounded-lg"
@@ -151,15 +153,14 @@ export default function Messages() {
                                     className="h-full w-full"
                                 />}
                         </div>
-                        <div className="text-sm font-semibold mt-2">{userChatData?.otherName}</div>
+                        <div className="text-sm font-semibold mt-2 text-center">{userChatData?.otherName}</div>
                         {userChatData?.currChatUserPic && <div className="flex flex-row items-center mt-3">
                             <div
                                 className="flex flex-col justify-center h-4 w-8 rounded-full"
                             >
-                                <div className="h-3 w-3 bg-gradient-to-r from-green-400 via-green-500 to-green-600
- rounded-full self-end mr-1"></div>
+                                
                             </div>
-                            <div className="leading-none text-xs">Active</div>
+                            
                         </div>}
                     </div>
                     <div className="flex flex-col mt-8">
@@ -189,7 +190,7 @@ export default function Messages() {
                         className="flex flex-col flex-auto flex-shrink-0 rounded-2xl bg-gray-100 h-full p-4"
                     >
                         <div ref={mesGridRef} className="flex flex-col h-full overflow-x-auto mb-4"
-                        //onScroll={e => console.log(e.target)}
+                        
                         >
                             <div className="flex flex-col h-full" >
                                 <div className="grid grid-cols-12 gap-y-2" >
@@ -212,7 +213,7 @@ export default function Messages() {
                                 <button
                                     className="flex items-center justify-center text-gray-400 hover:text-gray-600"
                                 >
-                                    {/*svg was here*/}
+                                    
                                     <span>{remChars}</span>
                                 </button>
                             </div>
@@ -226,47 +227,15 @@ export default function Messages() {
                                         type="text"
                                         className="flex w-full border rounded-xl focus:outline-none focus:border-indigo-300 pl-4 h-10"
                                     />
-                                    <button
-                                        className="absolute flex items-center justify-center h-full w-12 right-0 top-0 text-gray-400 hover:text-gray-600"
-                                    >
-                                        <svg
-                                            className="w-6 h-6"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M14.828 14.828a4 4 0 01-5.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                                            ></path>
-                                        </svg>
-                                    </button>
+                                    
                                 </div>
                             </div>
                             <div className="ml-4">
                                 <button onClick={handleSendCLick}
                                     className="bg-purple-500 hover:bg-purple-800 flex items-center justify-center  rounded-xl text-white px-4 py-1 flex-shrink-0"
                                 >
-                                    <span>Send</span>
-                                    <span className="ml-2">
-                                        <svg
-                                            className="w-4 h-4 transform rotate-45 -mt-px"
-                                            fill="none"
-                                            stroke="currentColor"
-                                            viewBox="0 0 24 24"
-                                            xmlns="http://www.w3.org/2000/svg"
-                                        >
-                                            <path
-                                                strokeLinecap="round"
-                                                strokeLinejoin="round"
-                                                strokeWidth="2"
-                                                d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8"
-                                            ></path>
-                                        </svg>
-                                    </span>
+                                    <span className="mr-2">Send</span>
+                                    <FontAwesomeIcon icon={faPaperPlane} />
                                 </button>
                             </div>
                         </div>}

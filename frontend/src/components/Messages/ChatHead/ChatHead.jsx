@@ -9,7 +9,7 @@ function ChatHead({ id, name, pic, handleClick }) {
                 <div id={id}
                     className="flex items-center justify-center h-8 w-8 bg-indigo-200 rounded-full"
                 >
-                    <img src={pic} id={id} alt={name[0]} className='rounded-full' />
+                    <img src={pic} id={id} alt={name[0]} className='rounded-full w-full h-full' />
                 </div>
                 <div id={id} className="ml-2 text-sm font-semibold">{name}</div>
             </button>

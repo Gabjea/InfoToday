@@ -41,6 +41,7 @@ int main(){
         auxSocket?.on('compile', message => {
             console.log(message);
             setAnswers(message.ans);
+            setErrorMsg(message.err)
             //setOutput(message);
         })
 
@@ -69,6 +70,7 @@ int main(){
     let [input, setInput] = React.useState();
 
     const [answers, setAnswers] = React.useState([]);
+    const [errorMsg, setErrorMsg] = React.useState('');
     const handleSubmit = event => {
         event.preventDefault();
         if (socket == null) {
@@ -77,7 +79,7 @@ int main(){
             }).then(res => {
                 //console.log(res.data);
                 setAnswers(res.data.ans);
-
+                setErrorMsg(res.data.err);
             }, err => {
                 console.error(err);
                 alert('ERROR!');
@@ -110,11 +112,11 @@ int main(){
 
             
             <div className='text-xl'>
-                {
+                { errorMsg === '' && (
                     answers.map((ans, index) => <div key={index} className={`${ans ? 'bg-green-700' : 'bg-red-500'} `}>Test #{index}: {ans ? 'CORECT' : 'GRESIT'}</div>)
-                }
+                ) || (<div className="bg-red-500 max-w-fit">{errorMsg}</div>)}
             </div>
-            <button className='' onClick={handleSubmit} id='submit-code'>Evalueaza</button>
+            <button className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded mt-2" onClick={handleSubmit} id='submit-code'>Evalueaza</button>
         </div>
     );
 }

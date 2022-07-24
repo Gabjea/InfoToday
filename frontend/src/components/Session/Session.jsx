@@ -30,6 +30,7 @@ export default function Session() {
 
         socket.on('user-joined-session', data => {
             setMembers(prevMems => [...prevMems, data])
+            
         })
 
         socket.on('connected', message => {
@@ -37,11 +38,12 @@ export default function Session() {
         })
 
         socket.on('connect-user', message => {
-            console.log('mes:', message);
+            
             const jwt = CookieManager.getCookie('jwt');
             if (jwt) {
                 //console.log(jwt);
                 socket.emit('connect-user', jwt);
+                
             }
         })
         //console.log('here');
@@ -73,11 +75,11 @@ export default function Session() {
     }
 
     return (
-        <div>
-            <div>
+        <div className="">
+            <div className="px-6">
                 <Members members={members} />
             </div>
-            <div className="flex items-center justify-end px-3 mt-5">
+            <div className="flex items-center justify-end mt-5">
                 <p className="text-xl">Session: #{sessionId}</p>
                 <button className="bg-purple-500 ml-2 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded " onClick={handleEndCLick}>end</button>
             </div>
