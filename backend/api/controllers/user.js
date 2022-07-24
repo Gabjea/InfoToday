@@ -267,7 +267,7 @@ const compileProblem = async (req, res) => {
         for (const index in problema.tests) {
          
            // const { stdout, stderr } = await exec(`cd ./uploads/compile/${numeProblema} && c++ -O3 ${user_id}.cpp -o ${user_id}.exe && ${user_id}.exe < ./inputs/${index}.txt`)
-           const { stdout, stderr } = await exec(`cd ./uploads/compile/  && echo ${problema.tests[index].input} > ${user_id}.txt && g++ -O3 ${user_id}.cpp -o ${user_id} && ./${user_id} < ${user_id}.txt && rm ${user_id}.txt`)
+           const { stdout, stderr } = await exec(`cd ./uploads/compile/  && echo ${problema.tests[index].input} > ${user_id}.txt && c++ -O3 ${user_id}.cpp -o ${user_id} && ./${user_id} < ${user_id}.txt && rm ${user_id}.txt`)
 
             tests.push(stdout?.trim() === problema.tests[index].output.trim() ? 100 / problema.tests.length : 0)
 
