@@ -65,17 +65,23 @@ export default function Problems({ socket }) {
 
     const handleBackClick = event => {
         event.preventDefault();
-        
-        socket?.emit('back');
+        if(socket) {
+            
+            socket?.emit('back');
+        }else {
+            setDisplayed('');
+            setSrcInp('');
+            setSelInp('*');
+        }
         //window.location.reload();
     }
 
     return (
-        <div className='px-6'>
+        <div className='px-6 mt-10'>
             
             
             {displayedPb && <button onClick={handleBackClick}
-                className="bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded mt-5"
+                className=" bg-purple-500 hover:bg-purple-800 text-white font-bold py-2 px-4 rounded mt-5"
             >
                 back
             </button>}

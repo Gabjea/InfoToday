@@ -3,7 +3,7 @@ import CookieManager from "./CookieManager";
 
 
 
-export const host = 'localhost';
+export const host = '192.168.43.105';
 export const hostWithPort = `${host}:3001`;
 export const baseHttpURL = `http://${hostWithPort}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;

@@ -31,7 +31,7 @@ export default function App() {
 
     return (
         <Router>
-            <div className="md:flex ">
+            <div className="md:flex">
                 <Sidebar  />
                 <div className="w-screen">
 

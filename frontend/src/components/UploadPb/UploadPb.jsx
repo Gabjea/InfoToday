@@ -38,7 +38,7 @@ export default function UploadPb(props) {
     }
 
     return (
-        <div className='h-screen flex items-center justify-center'>
+        <div className='min-h-screen flex items-center justify-center'>
             
             <form className='w-1/2' onSubmit={handleSubmit}>
             <div className="w-full md:w-full mb-2">
@@ -82,7 +82,7 @@ export default function UploadPb(props) {
                 }
                 <br />
                
-                <input className='text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-md px-5 py-2.5 text-center  w-full' type="submit" />
+                <input className='mb-10 text-white bg-gradient-to-r from-purple-500 via-purple-600 to-purple-700 hover:bg-gradient-to-br focus:ring-4 focus:ring-purple-300 dark:focus:ring-purple-800 font-medium rounded-lg text-md px-5 py-2.5 text-center  w-full' type="submit" />
             </form>
         </div>
     );

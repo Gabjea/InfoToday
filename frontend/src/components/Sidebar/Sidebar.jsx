@@ -32,7 +32,7 @@ export default function Sidebar({ socket }) {
       route: "/account",
     },
     { title: "Mesaje", src: faComment, route: "/messages" },
-    { title: "aplicari", src: faClipboard, route: "/applies" },
+    { title: "Aplicari", src: faClipboard, route: "/applies" },
   ]);
 
   React.useEffect(() => {
@@ -107,7 +107,7 @@ export default function Sidebar({ socket }) {
       }  bg-gradient-to-r from-purple-500 via-purple-600 to-purple-800 min-h-screen p-5`}
     >
       <div
-        className={`duration-500 ${open ? "translate-x-full mr-5" : "ml-1"} `}
+        className={`duration-500 ${open ? " translate-x-full mr-5" : "ml-1"} `}
       >
         <FontAwesomeIcon
           icon={open ? faXmark : faEllipsis}

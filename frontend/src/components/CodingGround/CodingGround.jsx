@@ -22,11 +22,11 @@ int main(){
 
     const [socket, setSocket] = React.useState(null);
     React.useEffect(() => {
-        console.log('coding-ground');
+        
         const auxSocket = props.socket;
 
         setSocket(auxSocket);
-
+        
         auxSocket?.on('connection', message => {
             console?.log(message);
         })
@@ -101,12 +101,12 @@ int main(){
             </div>
             
             
-            {<div ref={refToMov}
+             {socket != null && (<div ref={refToMov}
             className = "text-pink-600"
             id="movable" style={{ 'overflow': 'hidden', 'position': 'absolute', 'left': 0, 'top': 0, 'userSelect': 'none' }}>
                 <FontAwesomeIcon  icon={faArrowPointer}     />
                 <small style={{ 'overflow': 'hidden' }}> {name} </small>
-            </div>}
+            </div>) || (<div ref={refToMov}></div>)}
 
             
             <div className='text-xl'>
