@@ -5,9 +5,9 @@ import CookieManager from "./CookieManager";
 
 export const host = '79.113.236.89';
 export const hostWithPort = `${host}:3001`;
-export const baseHttpURL = `http://${hostWithPort}`;
+export const baseHttpURL = `https://${hostWithPort}`;
 export const baseURLPref = `${baseHttpURL}/api/v1`;
-export const baseWsURL = `ws://${hostWithPort}`;
+export const baseWsURL = `wss://${hostWithPort}`;
 const timeout = 30000e3;
 
 export const axiosInstanceToAPI = axios.create({
