@@ -30,7 +30,9 @@ function Session({ session }) {
         event.preventDefault();
         const id = session.session._id;
         axiosAuthInstanceToAPI.post(`/user/session/accept/${id}`).then((res) => {
-            window.location.reload();
+           if(res.data !== '')
+                alert(res.data)
+            else window.location.reload();
         });
     };
 
