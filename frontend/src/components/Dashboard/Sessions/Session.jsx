@@ -18,11 +18,9 @@ function Session({ session }) {
         const id = session.session._id;
 
         getUserDataFromJwtReq().then(({ coins }) => {
-            if (coins >= session.session.cost) {
-                window.location.assign(`/session/${id}`);
-            } else {
-                alert("Nu ai bani suficienti!");
-            }
+           
+            window.location.assign(`/session/${id}`);
+            
         });
     };
 
