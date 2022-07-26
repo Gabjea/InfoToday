@@ -9,7 +9,6 @@ export default function Signout()  {
             window.location.assign('/login');
             return;
         }else {
-            
              CookieManager.deleteCookie('jwt');
         window.location.reload();
         }
