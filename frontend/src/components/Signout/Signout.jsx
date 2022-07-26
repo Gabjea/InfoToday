@@ -5,9 +5,11 @@ export default function Signout()  {
 
     
     React.useEffect(() => {
-        window.location.assign('/login');
-         CookieManager.deleteCookie('jwt');
-          return; 
+        CookieManager.deleteCookie('jwt');
+        if (CookieManager.getCookie('jwt') == null) {
+            window.location.assign('/login');
+            return;
+        }
         
     })
 
