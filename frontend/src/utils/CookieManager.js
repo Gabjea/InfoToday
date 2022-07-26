@@ -24,6 +24,7 @@ export default class CookieManager {
     }
 
     static deleteCookie(cname) {
+        console.log(window.location.hostname)
         document.cookie = `${cname}=; Max-Age=0; path=/; domain=${window.location.hostname}`;
     }
 }
