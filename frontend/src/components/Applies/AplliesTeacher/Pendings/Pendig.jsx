@@ -26,9 +26,9 @@ export default function Pendig({ id, name, pic }) {
         <div className='flex items-center flex-col'>
             <div className="flex flex-row rounded-md py-6 p-3 w-1/2 shadow-lg">
                 <img style={{}} width={50} src={pic} alt="" />
-                <div className='font-bold'>{name}</div>
+                <div className='font-bold ml-5'>{name}</div>
 
-                <div className='ml-auto'>
+                <div className='ml-auto flex'>
                     <button onClick={handleAcceptClick} type="button" className="text-white bg-gradient-to-r from-green-400 via-green-500 to-green-600 hover:bg-gradient-to-br focus:ring-4 focus:ring-green-300 dark:focus:ring-green-800 font-medium rounded-lg text-sm px-5 py-2.5 text-center mr-2 mb-2">
                         <FontAwesomeIcon
                             icon={faCheck}
