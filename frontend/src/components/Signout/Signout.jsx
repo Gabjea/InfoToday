@@ -9,7 +9,7 @@ export default function Signout()  {
             return;
         }else {
              CookieManager.deleteCookie('jwt');
-       // window.location.reload();
+        window.location.reload();
         }
     }, [])
 
